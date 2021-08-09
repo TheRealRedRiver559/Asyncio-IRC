@@ -7,8 +7,6 @@ from rich import print
 db_name = ''
 db_pass = ''
 
-#not the greatest code, just for making new users. Will update later.
-
 with mysql.connect(
     host = 'localhost',
     user = 'root',
@@ -26,15 +24,12 @@ def create_user():
     username = str(input('Username : ')).lower()
     password = str(input('Password : '))
     try:
-        access_level = int(input('Access Level: 1-5 : '))
-        if access_level > 5:
-            print('Must be in range 1-5...')
-            return
-        elif access_level <= 0:
-            print('Must be in range of 1-5...')
+        access_level = int(input('Access Level: 1-inf : '))
+        if access_level <= 0:
+            print('Cannot be below 0 or 0.')
             return
     except ValueError:
-        print('Only integers allowed...')
+        print('Only integers allowed!')
         return
 
     salt = os.urandom(32)
