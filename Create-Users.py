@@ -17,8 +17,6 @@ with mysql.connect(
     cursor = conn.cursor()
     #users
     cursor.execute("CREATE TABLE IF NOT EXISTS users(user_id INTEGER AUTO_INCREMENT PRIMARY KEY, user_name VARCHAR(20) UNIQUE, user_hash VARBINARY(85), user_salt VARBINARY(85), role_id INT)")
-    #roles
-    cursor.execute("CREATE TABLE IF NOT EXISTS roles (id INTEGER AUTO_INCREMENT PRIMARY KEY, role_id INTEGER UNIQUE, role_name VARCHAR(20) UNIQUE)")
 
 def create_user():
     username = str(input('Username : ')).lower()
