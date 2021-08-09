@@ -1,2 +1,2 @@
 # TCP-Chat-Server
-TCP chat server, somthing i made for proactice and fun!
+TCP chat server, something i made for practice and fun!
