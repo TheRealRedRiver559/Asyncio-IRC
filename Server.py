@@ -89,7 +89,7 @@ def main():
         index = users.index(target_username)
         target_client = clients[index]
 
-        send_one_message(target_client, f'Server You have been banned for : Reason: {reason}'.encode())
+        send_one_message(target_client, f'Server: You have been banned for : Reason: {reason}'.encode())
         send_one_message(target_client, 'CLOSE'.encode())
         broadcast(f'{username}: {command_name} {target_username} {reason}'.encode())
         broadcast(f'Server: {target_username} has been banned for: Reason: {reason}'.encode())
