@@ -44,7 +44,6 @@ def main():
     #bans users
     @command('//ban', 2)
     def ban_user(username, command_name, arguments, reason=None):
-        print(commands)
 
         index = users.index(username)
         client = clients[index]
