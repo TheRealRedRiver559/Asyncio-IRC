@@ -19,18 +19,6 @@ def main():
     commands = {}
     prefix = '//' #changable prefix for all commands and descriptipns
 
-    #descriptions of commands. Added speratly for each command but may change later
-    #Will have a seperate file for them eventually or a better way of storing them
-    descriptions = {
-    'connections':{'description':'Lists the # of clients connected.', 'usage':f'{prefix}connections', 'examples':'Clients Online: 2\n'},
-    'users':{'description':'Prints a list of connected users.', 'usage':f'{prefix}users', 'examples':'[\'joe\', \'bob\']\n'},
-    'banned-users':{'description':'Prints a list of all banned users.', 'usage':f'{prefix}banned-users', 'examples':'[\'badperson2123\', \'banned_user12\']\n'},
-    'ban':{'description':'Bans the specified user. Use the silent argument for silent ban messages', 'usage':f'{prefix}ban <user> \[silent] \[reason]', 'examples':f'{prefix}ban joe\n{prefix}ban joe you were being bad!\n{prefix}ban test silent\nRequired Argument: <>\nOptional Argument: []\n'},
-    'unban':{'description':'Unbans the specified user.', 'usage':f'{prefix}unban <user> \[silent]', 'examples':f'{prefix}unban test\n{prefix}unban test silent\n'},
-    'kick':{'description':'Kicks the specified user.', 'usage':f'{prefix}kick <users> \[silent]', 'examples':f'{prefix}kick test\n{prefix}kick test silent\n'},
-    'help':{'description':'Prints a general set of available commands.', 'usage':f'{prefix}help \[command]', 'examples':f'{prefix}help\n{prefix}help ban\n'},
-    }
-
     error_message = {
         'Leave': 'Connection closed by client.',
         'Close': 'Connection closed by server.',
