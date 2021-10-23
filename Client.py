@@ -18,17 +18,28 @@ def get_time():
         hours -= 12
     return time.strftime(f"%m/%d/%Y {hours}:%M {setting}")
 
+def recv_message(client):
+    messageWL = client.recv(1024).decode()
+    message = messageWL[3:]
+    if len(message) == 0:
+        client.close()
+    length = int(messageWL[:3])
+    if length != len(message):
+        return (f'{message[:length]}')
+    return message
+def send_message(client, message):
+    length = str(len(message)).zfill(3)
+    client.send(f'{length}{message}'.encode())
+    return
+
 def client_receive():
     while True:
         try:
-            message = client.recv(1024).decode()
+            message = recv_message(client)
             if message == 'LOGIN':
-                client.send(f'I{username}'.encode())
-                client.send(f'I{password}'.encode())
-                print(client.recv(1024).decode())
-            elif len(message) == 0:
-                client.close()
-                break
+                send_message(client, f'I{username}')
+                send_message(client, f'I{password}')
+                print(recv_message(client))
             elif message.startswith(username):
                 print(f"[blue]{message[:message.find(':')]}[white]{message[message.find(':'):]}: [grey37]{get_time()}")
             elif message.startswith('Server:'):
@@ -49,7 +60,7 @@ def client_send():
     while True:
         message = input("")
         #print(f"\033[A{' '*len(message)}\033[A") currently testing. Seems to only work in the IDE
-        client.send(message.encode())
+        send_message(client, message)
 
 receive_thread = threading.Thread(target=client_receive)
 receive_thread.start()
