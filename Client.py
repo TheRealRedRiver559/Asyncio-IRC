@@ -22,7 +22,7 @@ def recv_message(client):
     messageWL = client.recv(1024).decode()
     message = messageWL[3:]
     if len(message) == 0:
-        client.close()
+        return message
     length = int(messageWL[:3])
     if length != len(message):
         return (f'{message[:length]}')
@@ -40,12 +40,15 @@ def client_receive():
                 send_message(client, f'I{username}')
                 send_message(client, f'I{password}')
                 print(recv_message(client))
-            elif message.startswith(username):
-                print(f"[blue]{message[:message.find(':')]}[white]{message[message.find(':'):]}: [grey37]{get_time()}")
-            elif message.startswith('Server:'):
+            elif len(message) == 0: #Connection Stopped
+                client.close()
+                break
+            elif message.startswith(username): #Blue for your username
+                print(f"[blue]{message[:message.find(':')]}[white]{message[message.find(':'):]} [grey37]{get_time()}")
+            elif message.startswith('Server:'): #Yellow for server
                 print(f"[yellow]{message}")
-            else:
-                print(f"[red]{message[:message.find(':')]}[white]{message[message.find(':'):]}: [grey37]{get_time()}")
+            else: #Red for other clients
+                print(f"[red]{message[:message.find(':')]}[white]{message[message.find(':'):]} [grey37]{get_time()}")
         except ConnectionAbortedError:
             print('Connection Ended...')
             client.close()
