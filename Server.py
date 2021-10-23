@@ -2,7 +2,8 @@ import socket
 import threading
 import json
 
-file_path = 'Tcp Server\\users.json' #Change path to your likings
+file_path = 'Tcp Server\\users.json' #Change paths to your likings
+description_path = 'Tcp Server\Descriptions.json'
 
 def main():
     host = 'localhost'
@@ -18,6 +19,12 @@ def main():
     users = []
     commands = {}
     prefix = '//' #changable prefix for all commands and descriptipns
+
+    with open(description_path, 'r') as f:
+        descriptions = json.load(f)
+        for command in descriptions:
+            descriptions[command]['usage'] = descriptions[command]['usage'].replace('@@@', prefix)
+            descriptions[command]['examples']= descriptions[command]['examples'].replace('@@@', prefix)
 
     error_message = {
         'Leave': 'Connection closed by client.',
@@ -208,8 +215,8 @@ def main():
             command_name = arguments[0]
             try:
                 role_id = commands[command_name][1]
-                detials = (f'-{command_name}-\n{descriptions[command_name]["description"]}\n\n-Usage-\n{descriptions[command_name]["usage"]}\n\n-Examples-\n{descriptions[command_name]["examples"]}\n\n-Permissions-\nPermission Level : {role_id}+')
-                send_message(client ,f'Server:\n{detials}')
+                details = (f'-{command_name}-\n{descriptions[command_name]["description"]}\n\n-Usage-\n{descriptions[command_name]["usage"]}\n\n-Examples-\n{descriptions[command_name]["examples"]}\n\n-Permissions-\nPermission Level : {role_id}+')
+                send_message(client ,f'Server:\n{details}')
                 print(f'Server: Command: {prefix}help {command_name} (Username: {username})')
                 return
             except KeyError:
