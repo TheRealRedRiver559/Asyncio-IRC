@@ -14,6 +14,7 @@ def main():
     server.listen()
 
     banned_users = []
+    muted_users = ['test']
     clients = [] 
     #clients and users will be combined in a dictionary soon
     users = []
@@ -293,6 +294,8 @@ def main():
                 
                 if len(message) == 0:
                     pass
+                elif username in muted_users:
+                    send_message(client ,'Server: You do not have permission to send messages!')
                 elif len(message) > 200:
                     send_message(client ,'Server: Message size exceeds the 200 character limit!')
                     continue
