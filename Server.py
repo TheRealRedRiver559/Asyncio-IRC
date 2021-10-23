@@ -71,8 +71,8 @@ def main():
     #bans users (Command syntax : ban <username> [silent] [reason])
     @command('ban', 3)
     def ban_user(username, arguments):
-        reason=None
-        silent_ban=False
+        reason = None
+        silent_ban = False
         client = clients[users.index(username)]
 
         if len(arguments) >= 2:
@@ -120,7 +120,7 @@ def main():
     @command('unban', 3)
     def unban_user(username, arguments):
 
-        silent_unban=False
+        silent_unban = False
         client = clients[users.index(username)]
 
         if len(arguments) > 1:
@@ -161,8 +161,8 @@ def main():
     @command('kick', 2)
     def kick_user(username, arguments):
         #kicks users but still allows them to join back
-        reason=None
-        silent_kick=False
+        reason = None
+        silent_kick = False
         client = clients[users.index(username)]
 
         if len(arguments) >= 2:
@@ -335,7 +335,7 @@ def main():
         while True:
             client, address = server.accept()
             print(f'{str(address)} has connected...')
-            send_message(client ,'LOGIN') #Sends message to start the login proccess. May change to be the first 2 inputs rather than sending a message.
+            send_message(client ,'LOGIN') #Sends message to start the login proccess. May change to be the first 2 inputs rather than sending a message for Login.
 
             try:
                 username = recv_message(client)[1:]
