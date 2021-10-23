@@ -197,7 +197,6 @@ def main():
         target_client = clients[users.index(target_username)]
         send_message(target_client ,f'Server: You have been kicked.\n\tReason: {reason}')
         print(f'Command: {prefix}kick {target_username} Silent={silent_kick} Reason:{reason} (Username: {username})')
-        user_leave(target_client, error_message['Close'])
 
         if silent_kick == True:
             send_message(client ,f'{target_username} has been kicked\n\tReason: {reason}.')
@@ -205,6 +204,7 @@ def main():
             print(reason)
             broadcast(f'{username}: {prefix}kick {target_username} {str(reason)}')
             broadcast(f'Server: {target_username} has been kicked.\n\tReason: {str(reason)}')
+        user_leave(target_client, error_message['Close'])
 
     @command('help', 2)
     def help_command(username, arguments=None):
