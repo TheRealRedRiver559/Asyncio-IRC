@@ -70,5 +70,5 @@ def run_client():
   receive_thread.start()
   send_thread = threading.Thread(target=client_send)
   send_thread.start()
-if __name__ == ´__main__´:
+if __name__ == '__main__':
   run_client()
