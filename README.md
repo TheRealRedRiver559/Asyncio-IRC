@@ -11,9 +11,8 @@ To Add
 - [ ] Login System with password
 - [x] Color Checks for usernames 
 - [x] Re-write using Asnyio and better more documented code.
-- [ ] More commands and a new system to send data across networks.
+- [ ] More commands and a new system to send data across networks. (SSL / TSL)
 - [ ] An SQL database for hashed + salted logins.
-- [ ] 
 To Fix
 
 - [x] Better performance with multiple users (Async will help a lot)
