@@ -18,10 +18,12 @@ class client():
             else:
                 print('Connected!')
                 self.connected = True
-                self.login()
+                self.login(client)
 
-    def login(self):
+    def login(self, client):
         self.username = input('Username: ')
+        data = json.dumps({'username':self.username, 'password':input('Password: ')})
+        client.send(data.encode())
     
     @staticmethod
     def get_time():
@@ -36,16 +38,20 @@ class client():
     def send_message(self, client):
         while True:
             message = input()
-            data = json.dumps({'username':self.username, 'message':message})
-            client.send(data.encode())
+
+            if len(message) > 200:
+                print('Too Long!')
+            else:
+                data = json.dumps({'length':len(message), 'username':self.username, 'message':message})
+                client.send(data.encode())
 
     def recv_message(self, client):
         while True:
-            message_data = json.loads(client.recv(1024).decode())
+            message_data = json.loads(client.recv(1024))
             message = f"{message_data['username']}: {message_data['message']}"
 
             if message_data['username'] == self.username: #Blue for your username
-                print(f"[blue]{message[:len(self.username)]} [white]{message[len(self.username):]} [grey37]{self.get_time()}")
+                print(f"[blue]{message[:len(self.username)]} [white]{message[len(self.username):]}[/white] [grey37]{self.get_time()}")
             else:
                 print(f"[red]{message[:len(message_data['username'])]} [white]{message[len(message_data['username']):]} [grey37]{self.get_time()}")
     
