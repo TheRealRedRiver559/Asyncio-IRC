@@ -39,7 +39,7 @@ class client():
         while True:
             message = input()
 
-            if len(message) > 200:
+            if len(message) > 2000:
                 print('Too Long!')
             else:
                 data = json.dumps({'length':len(message), 'username':self.username, 'message':message})
@@ -52,6 +52,8 @@ class client():
 
             if message_data['username'] == self.username: #Blue for your username
                 print(f"[blue]{message[:len(self.username)]} [white]{message[len(self.username):]}[/white] [grey37]{self.get_time()}")
+            elif message_data['username'] == 'Server':
+                print(f"[yellow]{message[:6]} [white]{message[6:]}[/white] [grey37]{self.get_time()}")
             else:
                 print(f"[red]{message[:len(message_data['username'])]} [white]{message[len(message_data['username']):]} [grey37]{self.get_time()}")
     
