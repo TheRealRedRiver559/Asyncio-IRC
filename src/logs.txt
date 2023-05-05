@@ -1,1 +1,1 @@
-
+"{\"sender\": \"redriver\", \"message\": \"Hello! This is a message stored in log.txt!\", \"message_type\": \"public\"}\n"
