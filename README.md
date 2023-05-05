@@ -1,6 +1,8 @@
 # TCP-Chat-Server
 This TCP chat server is an ongoing project and really just a nice learning experience for me and an intro into networking. I plan on adding tons of features in the fute and re-writing all of the code to make it run asynchrously and with much more security of course. This was just a small project at first but branched out as one of my main ones and I really enjoy working on this. Any help or advice to make this any better is always appreciated!
 
+For SSL go to the Async Branch
+
 # Setup
 
 This version includes Certifacites. You will need to either find one or sign one yourself. I reccomend just signing one yourself and sending it to both machine or placing it in 1 file, since this isnt secure anyways really. 
