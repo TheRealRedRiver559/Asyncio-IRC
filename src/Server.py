@@ -5,6 +5,7 @@ import aiofiles
 import os
 import ssl
 
+current_path = os.path.dirname(os.path.realpath(__file__))
 #version 1.3
 """
 + Added SSL
@@ -14,7 +15,7 @@ import ssl
 Still some issues, but id rather log it then not show anything
 """
 
-cert, key = r"src\selfsigned.crt", r"src\selfsigned.key"
+cert, key = rf"{current_path}\selfsigned.crt", rf"{current_path}\selfsigned.key"
 
 #this is a test server, some features (most) are not working
 #also a lot of things will be changed in the future such as message formats.
@@ -28,8 +29,6 @@ message_size = 200 #temp removed for testing
 username_len = 10
 
 file_writing = False
-
-current_path = os.path.dirname(os.path.realpath(__file__))
 
 async def timer():
     while True:
