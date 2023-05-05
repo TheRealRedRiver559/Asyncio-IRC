@@ -1,4 +1,4 @@
-# TCP-Chat-Server
+# TCP-Chat-Server  (Non SSL)
 This TCP chat server is an ongoing project and really just a nice learning experience for me and an intro into networking. I plan on adding tons of features in the fute and re-writing all of the code to make it run asynchrously and with much more security of course. This was just a small project at first but branched out as one of my main ones and I really enjoy working on this. Any help or advice to make this any better is always appreciated!
 
 # Setup
