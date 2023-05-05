@@ -8,10 +8,10 @@ Once the server is running you can connect clients to the server.
 # Todo and Future
 To Add
 - [ ] Original Commands
-- [ ] Login System with password
+- [x] Login System with password
 - [x] Color Checks for usernames 
 - [x] Re-write using Asnyio and better more documented code.
-- [ ] More commands and a new system to send data across networks. (SSL / TSL)
+- [x] More commands and a new system to send data across networks. (SSL / TSL)
 - [ ] An SQL database for hashed + salted logins.
 To Fix
 
