@@ -6,7 +6,7 @@ import aiofiles
 import ssl
 from Temp import clients, send_data, banned_users, user_leave
 
-# version 1.1
+# version 1.09
 
 # this is a test server, some things may and will break
 # also a lot of things will be changed in the future such as message formats, commands etc.
@@ -73,16 +73,13 @@ async def broadcast(
         if client.current_channel is not None:
             channel = client.current_channel
             for client in channel.clients:
-                print(client)
                 await send_data(client, data_format)
         else:
             for client in clients.values():
-                print(client)
                 if client.current_channel is None:
                     await send_data(client, data_format)
     else:
         for client in clients.values():
-            print(client)
             if client.current_channel is None:
                 await send_data(client, data_format)
 
@@ -112,7 +109,6 @@ async def multi_cast(
         await send_data(client, data_format)
 """
 
-
 async def send_history(client): #Sends the log.txt contents to a client
     async with aiofiles.open("./src/logs.txt", "r") as f:
         history_lines = await f.readlines()
@@ -127,8 +123,6 @@ async def receive_data(client: Client): #reads until EOF and returns the unloade
     try:
         data = (await client.reader.readuntil(b"\n")).decode()
         data = json.loads(data)
-        print(data)
-        print(len(data))
         return data
     except Exception: # TODO WIP, specific exception contexts to be added
         await user_leave(client)
@@ -212,7 +206,7 @@ async def login(client: Client):
 
 
 async def client_connected(reader : asyncio.StreamReader, writer : asyncio.StreamWriter):
-    task = asyncio.current_task(loop=None)  # magic to get current task
+    task = asyncio.current_task() 
     client = Client(reader, writer, task)
     await login(client)
     if chat_history:
