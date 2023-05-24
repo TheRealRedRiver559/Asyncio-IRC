@@ -1,13 +1,7 @@
 import inspect
 from Temp import clients, send_data, banned_users, user_leave, channels, Channel
-
-# more commands.
-# + ban
-# + banned-users
-# + users
-# + user-count
-# + much better and improved error handling, covers all cases (hopefully)
-
+import random
+import string
 
 class Commands:
     prefix = "//"
@@ -26,7 +20,7 @@ async def help_text():
     text = f"""
     Commnads:
         {Commands.prefix}help   ->  returns a useful list of available commands and their usages.
-        {Commands.prefix}create-channel <channel name>  ->   Creates a channel with the specified name.
+        {Commands.prefix}create-channel <channel name> (private)  ->   Creates a channel with the specified name.
         {Commands.prefix}join-channel <channel name>   ->  Joins specified channel.
         {Commands.prefix}leave-channel  ->  leaves the current channel you are in. 
         {Commands.prefix}delete-channel <channel name>   ->  Deletes the specified channel name if it exists.
@@ -41,7 +35,7 @@ async def help_text():
         {Commands.prefix}set-prefix <new prefix>  ->  changes commmand prefix.
         {Commands.prefix}channels  ->  returns a list of active channels.
         {Commands.prefix}command-history  ->  returns a list of prevously used commands by the user.
-        {Commands.prefix}set-perms <username> <permission level>  ->  changes the permission level of a user."""
+        {Commands.prefix}set-perm <username> <permission level>  ->  changes the permission level of a user."""
     return text
 
 
@@ -90,9 +84,9 @@ async def check_command(client, data: str):
             function = Commands.commands[function_name][0]
         else:
             return f"Command: {function_name}, not found"
-        
+
         public_output = Commands.commands[function_name][2]
-        if public_output == True:
+        if public_output:
             client.show_command = True
         else:
             client.show_command = False
@@ -100,49 +94,44 @@ async def check_command(client, data: str):
         command_permission_level = Commands.commands[function_name][1]
         if client.permission_level < command_permission_level:
             return f"Missing access to this command."
-        
+
         function_data = inspect.getfullargspec(function)
         args = function_data.args
         varargs = function_data.varargs
-        if "client" in args:
+
+        pass_client = "client" in args
+        if pass_client:
             args.remove("client")
 
         if len(message) > 1:
             parameters = message[1:]
-            if len(parameters) < len(args):
-                missing_parameters = args[len(parameters) :]
-                return f"Missing parameter(s): {', '.join(missing_parameters)}"
-        
-            if varargs:
-                # print(varargs)
-                arg_parameters = parameters[: len(args)]
-                varargs_parameters = parameters[len(args):]
+        else:
+            parameters = []
+
+        if len(parameters) < len(args):
+            missing_parameters = args[len(parameters):]
+            return f"Missing parameter(s): {', '.join(missing_parameters)}"
+
+        if varargs or parameters:
+            arg_parameters = parameters[:len(args)]
+            varargs_parameters = parameters[len(args):]
+            if pass_client:
                 output = await function(client, *arg_parameters, *varargs_parameters)
             else:
-                # print(parameters)
-                output = await function(client, *parameters)
-
-            if public_output == True:
-                await broadcast(data, sender=client)
-                await broadcast(output)
-            else:
-                data_format = {"sender": client.username, "message": data, "message_type": 'public'}
-                await send_data(client, data_format)
-                await send_data(client, output)
-
-        elif args or varargs:
-            return f"Missing parameter(s): {', '.join(args)}"
-
+                output = await function(*arg_parameters, *varargs_parameters)
         else:
-            output = await function(client)
-        
-            if public_output == True:
-                await broadcast(data, sender=client)
-                await broadcast(output)
+            if pass_client:
+                output = await function(client)
             else:
-                data_format = {"sender": client.username, "message": data, "message_type": 'public'}
-                await send_data(client, data_format)
-                await send_data(client, output)
+                output = await function(*parameters)
+
+        if public_output:
+            await broadcast(data, sender=client)
+            await broadcast(output)
+        else:
+            data_format = {"sender": client.username, "message": data, "message_type": 'public'}
+            await send_data(client, data_format)
+            await send_data(client, output)
 
     except TypeError as e:
         return f"Invalid usage: {str(e)}"
@@ -161,7 +150,7 @@ async def broadcast_command(client, *message):
 
 
 @Commands.command("users", 1, public_output=True)
-async def users_online(client):
+async def users_online():
     user_list = [x for x in clients.keys()]
     message = f"Users online: {user_list}"
     format = {"sender": "Server", "message": message, "message_type": "public"}
@@ -170,7 +159,7 @@ async def users_online(client):
 
 
 @Commands.command("channels", 1, public_output=True)
-async def get_channels(client):
+async def get_channels():
     channel_list = [x for x in channels.keys()]
     message = f"Channels: {channel_list}"
     format = {"sender": "Server", "message": message, "message_type": "public"}
@@ -179,7 +168,7 @@ async def get_channels(client):
 
 
 @Commands.command("user-count", 5)
-async def users_online(client):
+async def users_online():
     message = f"Number of users online: {len(clients)}"
     format = {"sender": "Server", "message": message, "message_type": "public"}
     return format
@@ -187,7 +176,7 @@ async def users_online(client):
 
 
 @Commands.command("banned-users", 5)
-async def users_banned(client):
+async def users_banned():
     # will be combined with users function eventually
     """Sends a list of all banned users"""
     banned_list = [x for x in banned_users]
@@ -231,7 +220,7 @@ async def ban_user(client, *data):
 
 
 @Commands.command("unban", 5)
-async def unban_user(client, *data):
+async def unban_user(*data):
     format = {"sender": "Server", "message": "", "message_type": "private"}
     target_username = data[0]
     if target_username in banned_users:
@@ -250,7 +239,7 @@ async def unban_user(client, *data):
 
 
 @Commands.command("help", 1, public_output=True)
-async def help(client):
+async def help():
     message = await help_text()
     format = {
         "sender": "Server",
@@ -262,7 +251,7 @@ async def help(client):
 
 
 @Commands.command("set-prefix", 5)
-async def change_prefix(client, prefix):
+async def change_prefix(prefix):
     Commands.prefix = prefix
     format = {
         "sender": "Server",
@@ -274,7 +263,7 @@ async def change_prefix(client, prefix):
 
 
 @Commands.command("disable-command", 5)
-async def turn_off_command(client, command_name):
+async def turn_off_command(command_name):
     format = {"sender": "Server", "message": "", "message_type": "private"}
     if command_name in Commands.commands:
         if command_name not in Commands.killed_commands:
@@ -293,7 +282,7 @@ async def turn_off_command(client, command_name):
 
 
 @Commands.command("enable-command", 5)
-async def turn_on_command(client, command_name):
+async def turn_on_command(command_name):
     format = {"sender": "Server", "message": "", "message_type": "private"}
     if command_name in Commands.commands:
         if command_name in Commands.killed_commands:
@@ -344,16 +333,20 @@ async def leave_channel(client):
 
 
 @Commands.command("create-channel", 5)
-async def create_channel(client, channel_name):
+async def create_channel(channel_name):
+
+
     format = {"sender": "Server", "message": "", "message_type": "private"}
     if channel_name in channels.keys():
         format["message"] = f"The channel {channel_name}, already exists."
     else:
+            
         channel = Channel(channel_name)
         channels[channel_name] = channel
         format["message"] = f"The channel {channel_name}, has been created."
 
-    await send_data(client, format)
+    return format
+    #await send_data(client, format)
 
 
 @Commands.command("delete-channel", 5)
@@ -371,18 +364,15 @@ async def delete_channel(client, channel_name):
     await send_data(client, format)
 
 @Commands.command("set-perm", 1)
-async def change_channel_perm(client, *data):
-    format = {
-        "sender": "Server",
-        "message": "You have been banned!",
-        "message_type": "private",
-    }
+async def change_channel_perm(*data):
+    format = {"sender": "Server","message": "","message_type": "public"}
+
     target_username = data[0]
     permission_level = data[1]
-
     try:
         permission_level = int(permission_level)
-    except Exception:
+    except Exception as e:
+        print(e)
         format["message"] = "Permission must be an integer."
         #await send_data(client, format)
         return format
@@ -419,6 +409,9 @@ async def show_client_command_history(client):
     format = {"sender": "Server", "message": message, "message_type": "public"}
     
     return format
+
+
+
 
 
 
