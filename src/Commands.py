@@ -3,6 +3,14 @@ from Temp import clients, send_data, banned_users, user_leave, channels, Channel
 import random
 import string
 
+# more commands.
+# + ban
+# + banned-users
+# + users
+# + user-count
+# + much better and improved error handling, covers all cases (hopefully)
+
+
 class Commands:
     prefix = "//"
     commands = {}
@@ -411,9 +419,13 @@ async def show_client_command_history(client):
     return format
 
 
-
-
-
-
-
+#WIP broken command
+@Commands.command('input-test', 1)
+async def input_test(client):
+    format = {"sender": "Server", "message":'Input Test: ', "message_type": "public"}
+    await send_data(client, format)
+    msg = await client.receive_data()
+    #Sometimes returns the heartbeat time message. Or can completely break the server etc
+    format['message'] = msg
+    return format
 
