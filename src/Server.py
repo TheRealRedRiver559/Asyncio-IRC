@@ -54,6 +54,18 @@ class Client:
 
         self.command_history = []
 
+    async def receive_data(client): #reads until EOF and returns the unloaded data
+        try:
+            data = (await client.reader.readuntil(b"\n")).decode()
+            data = json.loads(data)
+            return data
+        except Exception as e: # TODO WIP, specific exception contexts to be added
+            await user_leave(client)
+            return
+
+    
+    
+
 async def log_timer():
     while True:
         await asyncio.sleep(5)
@@ -161,23 +173,12 @@ async def send_history(client): #Sends the log.txt contents to a client
                 await send_data(client, line)
 
 
-
-async def receive_data(client: Client): #reads until EOF and returns the unloaded data
-    try:
-        data = (await client.reader.readuntil(b"\n")).decode()
-        data = json.loads(data)
-        return data
-    except Exception as e: # TODO WIP, specific exception contexts to be added
-        await user_leave(client)
-        return
-
-
 async def handle_client(client: Client):
     """
     Handles the client and acts as the main guard for errors. 
     Will not work until the user has logged in."""
     while client.logged_in:
-        data = await receive_data(client)
+        data = await client.receive_data()
         if data is None:
             return
         try:
@@ -235,7 +236,7 @@ async def login(client: Client):
     while not client.logged_in:
         await send_data(client, data_format)
 
-        login_data = await receive_data(client)
+        login_data = await client.receive_data()
         try:
             username = login_data["username"]
         except (KeyError, TypeError) as e:
