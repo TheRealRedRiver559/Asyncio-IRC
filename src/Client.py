@@ -7,16 +7,19 @@ import ssl
 import time
 import sys
 
-os.system('color')
+os.system('Color')
 
+# SSL cert path (Self-signed)
 cert = "./certs/cert.pem"
+
+# Hostname / Ip, and Port number of the server
 host, port = ('localhost', 9090)
 
-ssl_connection = False # The server and the client do NOT negatioate connection types yet so pick either True or False for both
-# the server and the client. (I will update this soon.)
+ssl_connection = False
 
 
-class color: #Color codes
+# Color codes for terminal coloring
+class Color:
     BLUE = '\033[94m'
     GREY = '\033[90m'
     RED = '\033[31m'
@@ -25,9 +28,9 @@ class color: #Color codes
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
 
-class Client():
-    """Client class for handling information about the host, port, username, and if it is connected so it can keep trying to login or connnect"""
-    def __init__(self, host, port):
+
+class Client:
+    def __init__(self):
         self.host = host
         self.port = port
         self.username = None
@@ -38,22 +41,24 @@ class Client():
 
         self.message_count = 0
 
-        #server info that will be sent on connect
+        # server info that will be sent on successful connection
         self.username_max = None
         self.message_max = None
         self.current_channel = 'Main'
 
-    async def leave(self): #Closes connection client side.
+    # Closes connection client side.
+    async def leave(self):
         self.connected = False
         if not self.writer.is_closing():
             self.writer.close()
             await self.writer.wait_closed()
         await self.press_to_continue()
 
-    async def press_to_continue(self):
+    @staticmethod
+    async def press_to_continue():
         await aioconsole.ainput("Press Enter to continue...")
 
-    #trys to connect to server until succesful
+    # tries to connect to server until successful
     async def connect(self):
         if ssl_connection:
             ssl_context = ssl.create_default_context(ssl.Purpose.SERVER_AUTH)
@@ -61,7 +66,7 @@ class Client():
             ssl_context.load_verify_locations(cert)
 
         """Attempts to connect to the server / host until it is accepted. Using connect_ex to prevent exceptions"""
-        while self.connected == False:
+        while not self.connected:
             print(f'Connecting to (HOST: {self.host}) (PORT: {self.port})...')
             try:
                 if ssl_connection:
@@ -75,12 +80,15 @@ class Client():
                 self.message_max = data['message_length']
 
                 self.connected = True
-            except ConnectionRefusedError: #Server offline or unreachable
+
+            # Server offline or unreachable
+            except ConnectionRefusedError:
                 continue
         
     async def login(self):
         """Takes in the user's login and saves the username, the password is just input and is not stored anywhere"""
-        #Password is not used since this is in a testing phase, you can put whatever. Please do not use an actual password as it is plain-text
+        #  is not used since this is in a testing phase, you can put whatever.
+        #  Please do not use an actual password as it is plain-text
         while not self.logged_in:
             try:
                 data = await self.receive_data()
@@ -121,23 +129,25 @@ class Client():
                     return
 
     async def send_message(self, message, message_type='INFO'):
-        data = (json.dumps({'message':message, 'message_type':message_type, 'time':str(time.time())})+'\n').encode()
+        data = (json.dumps({'message': message, 'message_type': message_type, 'time': str(time.time())})+'\n').encode()
         self.writer.write(data)
         await self.writer.drain()
 
-    async def format_message(self, message_data): #Formats message according to the client. Client side only. Customizable
+    # Formats message according to the client. Client side only. Customizable
+    async def format_message(self, message_data):
 
         sender = message_data['sender']
         message = message_data['message']
         unix_time = message_data['time']
         date_time = datetime.datetime.fromtimestamp(int(float(unix_time))).strftime("%m/%d/%Y %#I:%M %p")
 
-        if sender == self.username: #Blue for your username
-            return(f"{color.BLUE}{self.username}{color.GREY} : {color.END}{message} {color.GREY}{date_time}{color.END}")
+        # Blue for your username, Red for other, yellow for Server
+        if sender == self.username:
+            return f"{Color.BLUE}{self.username}{Color.GREY} : {Color.END}{message} {Color.GREY}{date_time}{Color.END}"
         elif sender == 'Server':
-            return(f"{color.YELLOW}{sender}{color.GREY} : {color.END}{message} {color.GREY}{date_time}{color.END}")
+            return f"{Color.YELLOW}{sender}{Color.GREY} : {Color.END}{message} {Color.GREY}{date_time}{Color.END}"
         else:
-            return(f"{color.RED}{sender}{color.GREY} : {color.END}{message} {color.GREY}{date_time}{color.END}")
+            return f"{Color.RED}{sender}{Color.GREY} : {Color.END}{message} {Color.GREY}{date_time}{Color.END}"
 
     async def receive_data(self):
         try:
@@ -164,28 +174,26 @@ class Client():
             os.system(f"title Latency (s): {latency}    Channel : {self.current_channel}")
 
         elif message_type == 'CHANNEL_CHANGE':
-            if message == None:
+            if message is None:
                 self.current_channel = 'Main'
             else:
                 self.current_channel = message 
         else:
             return data
 
-        
-
     async def client_handler(self):
-        """Recieves messages from the server and checks the message data for usernames. Basic coloring for other names and the server messages"""
+        """Receives messages from the server and checks the message data for usernames.
+         Basic coloring for other names and the server messages"""
         while self.logged_in:
             data = await self.receive_data()
-            if data == None:
+            if data is None:
                 if self.connected:
                     await self.leave()
                 return
 
             data = await self.filter_data(data)
-            if data == None:
+            if data is None:
                 continue
-                
 
             message = await self.format_message(data)
             if data['sender'] == self.username:
@@ -199,16 +207,11 @@ class Client():
             message = await aioconsole.ainput()
             sys.stdout.write('\x1b[1A')
             sys.stdout.write('\x1b[2K')
-            #sys.stdout.write('\x1b[1B')
-            #message = (await aioconsole.ainput(prompt=f"{self.username}@{self.current_channel} >", use_stderr=True))
 
-            #if message == 'spam':
-                #message = ('spam'*17001)
-            #message = 'spam' 
-            #Test for spam and max message length
-
-            if len(message) > self.message_max: #change this cap if you would like, serverside will send this info on first connection eventually
-                print('Message Too Long!') #Server checks this value, but it saves resources checking on client to prevent it in the first place.
+            # change this cap if you would like, serverside will send this info on first connection eventually
+            if len(message) > self.message_max:
+                # Server checks this value, but it saves resources checking on client to prevent it in the first place.
+                print('Message Too Long!')
             else:
                 try:
                     await self.send_message(message)
@@ -220,10 +223,10 @@ class Client():
     async def run_client(self):
         await self.connect()
         await self.login()
-        recieve_message = asyncio.create_task(client.client_handler())
+        receive_message = asyncio.create_task(client.client_handler())
         send_message = asyncio.create_task(client.receive_input())
-        await asyncio.gather(recieve_message, send_message)
+        await asyncio.gather(receive_message, send_message)
 
 
-client = Client(host, port)
+client = Client()
 asyncio.run(client.run_client())
