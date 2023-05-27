@@ -54,13 +54,13 @@ class Client:
 
         self.command_history = []
 
-    async def receive_data(client): #reads until EOF and returns the unloaded data
+    async def receive_data(self): #reads until EOF and returns the unloaded data
         try:
-            data = (await client.reader.readuntil(b"\n")).decode()
+            data = (await self.reader.readuntil(b"\n")).decode()
             data = json.loads(data)
             return data
         except Exception as e: # TODO WIP, specific exception contexts to be added
-            await user_leave(client)
+            await user_leave(self)
             return
 
     
