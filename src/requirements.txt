@@ -1,2 +1,0 @@
-aioconsole==0.4.1
-aiofiles==23.1.0
