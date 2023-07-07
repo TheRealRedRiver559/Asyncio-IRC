@@ -1,8 +1,7 @@
-from PyQt6 import QtCore, QtGui, QtWidgets
-
+from PySide6 import QtCore, QtGui, QtWidgets
 
 class Ui_SettingsForm(object):
-    def setupUi(self, SettingsForm):
+    def setupUi(self, SettingsForm : QtGui.QWindow):
         SettingsForm.setObjectName("SettingsForm")
         SettingsForm.resize(466, 398)
         SettingsForm.setMinimumSize(QtCore.QSize(466, 398))
@@ -29,7 +28,7 @@ class Ui_SettingsForm(object):
         self.gridLayout_2.addLayout(self.horizontalLayout_2, 2, 0, 1, 1)
         self.ThemeBox = QtWidgets.QGroupBox(self.settingsBox)
         self.ThemeBox.setObjectName("ThemeBox")
-        self.themeComboBox = QtWidgets.QComboBox(self.ThemeBox)
+        self.themeComboBox : QtWidgets.QComboBox = QtWidgets.QComboBox(self.ThemeBox)
         self.themeComboBox.setGeometry(QtCore.QRect(10, 30, 69, 22))
         self.themeComboBox.setObjectName("themeComboBox")
         self.themeComboBox.addItem("")
