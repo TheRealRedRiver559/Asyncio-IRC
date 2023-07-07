@@ -3,6 +3,8 @@ This TCP chat server is an ongoing project and really just a nice learning exper
 
 For non-SSL go to the Async Branch
 
+There is now a GUI folder that contains a work in progress GUI. This is still in testing and devolupment so it may crash or have unexpecuted behavour and updated on GitHub.
+
 # Setup
 
 Be sure to install the Requirments and that you have all the required dependicies installed.
@@ -14,8 +16,6 @@ SSL is optional, you will have to self sign certs if you would like to do that u
 The client will ask for a username and password to login, these values do NOT matter since this is a proof of concept type of project. 
 Most settings and options are configurable in the Server.py and Commands.py file such as message logging, and more. 
 You can add commnads very easily due to the simple decorator system I have in place. 
-
-A GUI is also being made for the Client program that is using a library called "CustomTkinter" It should be done in about 1-2 months. 
 
 # Command Usage
 Commands are stored in the Commands.py file. Here you can edit command functionality easily and change whatever you want. There is a Temp.py file acting as a intermdiary for the Commands and Server file. This file stores some client information and general data sets. Kind of like a local mini data base. 
@@ -38,8 +38,11 @@ disable-command <command name>     ->  diables the specified command.
 enable-command <command name>  ->  enables the specified command."""
 
 
-# Todo and Future Roadmap
-GUI, private messaging, file transfering, compression
+# Recent Updates
+- Added a new ping system for clients that did not close.
+- New WIP GUI.
+- New messaging format for server-client messages
+- Added type hints and some documentation
 
 # Todo and Future
 To Add
@@ -49,10 +52,10 @@ To Add
 - [x] Re-write using Asnyio and better more documented code.
 - [x] More commands and a new system to send data across networks. (SSL / TSL)
 - [ ] An SQL database for hashed + salted logins.
-- [ ] GUI for clients
+- [X] GUI for clients
 - [ ] Server clustering for load balancing and to create larger networks.
-- [ ] Private Channels
-- [ ] Message control features for server side (Allows complex functions and commands that can recieve input and responses)
+- [X] Private Channels
+- [ ] Message control features for server side (Allows complex functions and commands that can recieve input and responses) I will use Asyncio.Event() for this 
 
 To Fix
 - [x] Better performance with multiple users (Async will help a lot)
@@ -60,16 +63,14 @@ To Fix
 - [x] Color checks and meta data in messages
 - [ ] Any erros still missing that havent been updated...
 Some current bugs are as follows -
-- Basic disconect exceptions that have not been covered yet. 
-- Changing Networks when connected will void that connected username.
+  None at the moment!
   
 I plan on adding tons of new stuff and cool features so any suggestions are awesome! This is by no means a secure server or anything like that, i just made it for fun and practice. Im sure there are multiple vulnerabilities and issues so i advise not using this for anything serious.
 Enjoy!
 
 
 # Examples or images
-[image-7](https://github.com/TheRealRedRiver559/Asyncio-TCP/assets/80642468/6b9ec54d-2600-4f8f-a9ec-5c51e41558d7)
-  
+![image-7](https://github.com/TheRealRedRiver559/Asyncio-TCP/assets/80642468/6b9ec54d-2600-4f8f-a9ec-5c51e41558d7)
 ![image-8](https://github.com/TheRealRedRiver559/Asyncio-TCP/assets/80642468/8460739d-17d7-4ff9-b333-d977a07d3e4a)
 ![image](https://github.com/TheRealRedRiver559/Asyncio-TCP/assets/80642468/e4103b6e-90ef-4f5f-bbb3-cd3d69b4f935)
 
