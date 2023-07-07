@@ -1,31 +1,69 @@
 QGroupBox {
-    border: 1 px solid #2e2c2c;    margin-top: 5ex; /* leave space at the top for the title */}# miscgroupBox {
-        margin - top: 0 ex;
-    }
-    QGroupBox::title {
-        subcontrol - origin: margin;
-        subcontrol - position: top left; /* position at the top center */
-        padding: 5 px;
-    }
-    QPushButton {
-        background - color: #1f1f1f;}QPushButton:hover {	 background-color: # 2e2 c2c;
-    }
-    QPushButton: disabled {
-        background - color: #1f1f1f;}QHeaderView::section {    background-color: # 1 f1f1f;
-        border: 1 px solid #333333;	color: # f0f0f0;
-    }
-    QWidget {
-        background - color: #1f1f1f;	color: # f0f0f0;
-    }
-    QLineEdit {
-        color: #f0f0f0;border: 1 px solid #2e2c2c;}QTableWidget {    background-color: # 1 f1f1f;color: #f0f0f0;gridline - color: #555454;    border: 1px solid # 333030;
-    }
-    QTableWidget::item: selected {
-        background - color: #2e2c2c;}QToolButton {    background-color: # 2e2 c2c;
-        color: #f0f0f0;
-    }
-    QRadioButton {
-        color: #f0f0f0;border: none;
-    }
-    QToolButton: hover {
-            background - color: #1f1f1f;}
+	border: 1 px solid #2e2c2c;
+	margin-top: 5ex;
+ /* leave space at the top for the title */;
+}
+
+# miscgroupBox {
+	margin - top: 0 ex;
+}
+
+QGroupBox::title {
+	subcontrol - origin: margin;
+	subcontrol - position: top left;
+ /* position at the top center */
+	padding: 5 px;
+}
+
+QPushButton {
+	background - color: #1f1f1f;
+}
+
+QPushButton:hover {
+	background-color: # 2e2 c2c;
+}
+
+QPushButton: disabled {
+	background - color: #1f1f1f;
+}
+
+QHeaderView::section {
+	background-color: # 1 f1f1f;
+	border: 1 px solid #333333;
+	color: # f0f0f0;
+}
+
+QWidget {
+	background - color: #1f1f1f;
+	color: # f0f0f0;
+}
+
+QLineEdit {
+	color: #f0f0f0;
+	border: 1 px solid #2e2c2c;
+}
+
+QTableWidget {
+	background-color: # 1 f1f1f;
+	color: #f0f0f0;
+	gridline - color: #555454;
+	border: 1px solid # 333030;
+}
+
+QTableWidget::item: selected {
+	background - color: #2e2c2c;
+}
+
+QToolButton {
+	background-color: # 2e2 c2c;
+	color: #f0f0f0;
+}
+
+QRadioButton {
+	color: #f0f0f0;
+	border: none;
+}
+
+QToolButton: hover {
+	background - color: #1f1f1f;
+}
