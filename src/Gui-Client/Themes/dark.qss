@@ -12,11 +12,8 @@ QGroupBox::title {
    /* position at the top center */
     padding: 5px;
 }
-QPushButton {
-    background-color: #1f1f1f;
-}
 QPushButton:hover {
-    background-color:red;
+    background-color:rgb(34, 34, 34);
 }
 QPushButton:disabled {
     background-color: #1f1f1f;
@@ -29,6 +26,10 @@ QHeaderView::section {
 QWidget {
     background-color: black;
     color: #f0f0f0;
+}
+
+QPushButton {
+    background-color: #1f1f1f;
 }
 QLineEdit {
     color: #f0f0f0;
