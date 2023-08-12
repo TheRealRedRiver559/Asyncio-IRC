@@ -1,0 +1,56 @@
+#dateslist, #usernamelist, #messageslist, #onlineuserslist {
+    background-color: rgb(255, 255, 255);
+ }
+ 
+ #username_list {
+ color: #c3cfd8;
+ }
+ 
+ #usernamelb {
+ background-color: rgb(255, 255, 255);
+ }
+ 
+ #line, #toptitlelb, #bottomlb, #messagedivider, #clearbutton, #sendbutton, #leavebutton, #frame, #helpbutton, #settingsbutton, #channelslabel, #userslabel {
+    background-color: rgb(219, 213, 213);
+ }
+ 
+ #frame2, #inputbox {
+ background-color: rgb(255, 255, 255);
+ }
+ 
+ #usernamelist, #usernamelb {
+    color: #15ada8;
+    border: 0px;
+    text-align: 'right';
+ }
+ 
+ 
+ QPlainTextEdit{	
+    color: rgb(0, 173, 13);
+    border: 0px;
+    outline: none;
+ }
+ 
+ #sendbutton, #clearbutton, #leavebutton, #settingsbutton, #helpbutton {
+     color: green;
+     background-color:#cdc5c5;
+ }
+ 
+ QListWidget{
+ color: rgb(0, 173, 13);
+ border: 0px;
+ }
+ 
+ QFrame {
+    border-color: rgb(219, 213, 213);
+ }
+ 
+ #ServerTable {
+ border-color:#2e2c2c;
+ }
+ 
+ QLabel {
+    color: #f0f0f0;
+ }
+ 
+ 

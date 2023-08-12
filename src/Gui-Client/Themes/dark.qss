@@ -1,0 +1,125 @@
+QGroupBox {
+    border: 1px solid #2e2c2c;
+    margin-top: 5ex;
+   /* leave space at the top for the title */
+}
+#miscgroupBox {
+    margin-top: 0ex;
+}
+QGroupBox::title {
+    subcontrol-origin: margin;
+    subcontrol-position: top left;
+   /* position at the top center */
+    padding: 5px;
+}
+QPushButton {
+    background-color: #1f1f1f;
+}
+QPushButton:hover {
+    background-color:red;
+}
+QPushButton:disabled {
+    background-color: #1f1f1f;
+}
+QHeaderView::section {
+    background-color: #1f1f1f;
+    border: 1px solid #333333;
+    color: #f0f0f0;
+}
+QWidget {
+    background-color: black;
+    color: #f0f0f0;
+}
+QLineEdit {
+    color: #f0f0f0;
+    border: 1px solid #2e2c2c;
+}
+QTableWidget {
+    background-color: #1f1f1f;
+    color: #f0f0f0;
+    gridline-color: #555454;
+    border: 1px solid #333030;
+}
+QTableWidget::item:selected {
+    background-color:#2e2c2c;
+}
+QToolButton {
+    background-color: #2e2c2c;
+    color: #f0f0f0;
+}
+QRadioButton {
+    color: #f0f0f0;
+    border: none;
+}
+QToolButton:hover {
+    background-color: #1f1f1f;
+}
+
+#dateslist, #usernamelist, #messageslist, #onlineuserslist, #channelslist {
+   background-color: rgb(0, 0, 0);
+}
+
+#username_list {
+color: #319be6;
+}
+
+#usernamelb {
+background-color: black;
+}
+
+
+#toptitlelb, #bottomlb, #messagedivider, #clearbutton, #sendbutton, #leavebutton, #frame, #helpbutton, #settingsbutton {
+   background-color: rgb(30, 30, 30);
+}
+
+#frame, #inputbox {
+background-color: rgb(0,0, 0);
+}
+
+#usernamelist, #usernamelb {
+   color: #319be6;
+   border: 0px;
+   text-align: 'right';
+}
+
+
+QPlainTextEdit{	
+   color: rgb(0, 173, 13);
+   border: 0px;
+   outline: none;
+}
+
+#sendbutton, #clearbutton, #leavebutton, #settingsbutton, #helpbutton {
+color: green;
+}
+
+#sendbutton:hover {
+    background-color: #2e2c2c;
+}
+
+QListWidget{
+color: rgb(0, 173, 13);
+border: 0px;
+}
+
+#ServerTable {
+border-color:#2e2c2c;
+}
+
+QLabel {
+   color: #f0f0f0;
+}
+
+#usernamelist {
+border-right: 1px solid #1f1f1f;;
+}
+
+#userslabel, #channelslabel {
+border: 1px solid #1f1f1f;
+}
+
+#messageslist, #channelslabel, #channelslist, #onlineuserslist{
+border-left: 1px solid #1f1f1f;
+border-right: 1px solid #1f1f1f;
+}
+
