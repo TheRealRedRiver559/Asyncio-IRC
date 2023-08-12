@@ -10,7 +10,11 @@ from misc.settings import Settings
 clients = dict()
 banned_users = set()
 channels = dict()
- # Chat history, sends all messages to a new user (WIP)
+# TODO add a channel permission dict and use that instead. 
+# This will allow for channels to have thier own permission
+# Special permissions will override all others, this is a future feature
+
+# These are events that are used for commands such as input-test shown in Commands.py
 command_response_event = asyncio.Event()
 command_request_event = asyncio.Event()
 
@@ -64,6 +68,7 @@ class Message:
         )
 
 
+# Sends a message to the client
 async def send_message(client, message): #Delimter = '\n' EOF marker
     if client.connected:
         if isinstance(message, Message):
@@ -78,7 +83,7 @@ class Client:
     Client class. This class stores information about the instance such as permission levels, usernames, tasks,
     command history's and more. It is what is passed around in the server.
     """
-    keep_alive_wait_time = 10
+    keep_alive_wait_time = 10 # Waits 10 seconds before disconnecting of no response.
 
     def __init__(self, reader, writer, task):
         self.reader = reader
