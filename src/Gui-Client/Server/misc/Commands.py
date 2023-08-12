@@ -16,7 +16,8 @@ from misc.Temp import (
 )
 
         
-
+# Command holder and decorator for adding new commands
+# Takes in name, permission for commands, usage, and whether it show as a slash command
 class Commands:
     prefix = "//"
     commands = {}
@@ -33,7 +34,7 @@ class Commands:
         return wrapper
 
 
-async def help_text():
+async def help_text(): # Just generic help text. Badly formatted
     text = f"""Commnads:
         {Commands.prefix}help   ->  returns a useful list of available commands and their usages.
         {Commands.prefix}create-channel <channel name> (private)  ->   Creates a channel with the specified name.
@@ -54,7 +55,7 @@ async def help_text():
         {Commands.prefix}set-perm <username> <permission level>  ->  changes the permission level of a user."""
     return text
 
-
+# This sends messages 
 async def send(client : Client, message : Message, to_all=False, to_channel=False):
     try:
         usage = f'{Commands.prefix}{message.message}'
@@ -71,7 +72,7 @@ async def send(client : Client, message : Message, to_all=False, to_channel=Fals
     except Exception as e:
         print(e)
 
-
+# Broadcasts to all users or to a certain channel
 async def broadcast(message : Message, to_all=False):  # broadcasts to all users
         
         if to_all:
@@ -90,7 +91,7 @@ async def broadcast(message : Message, to_all=False):  # broadcasts to all users
                     if client.current_channel is None:
                         await send_message(client, message)
 
-
+# Command history for users when they use a command. Usage is also logged
 async def update_command_history(client, command_message: str):
     try:
         if len(client.command_history) == 5:  # 5, is total log amount cap
@@ -99,6 +100,7 @@ async def update_command_history(client, command_message: str):
     except Exception as e:
         print(e)
 
+# Executes the command. This is the command checker
 async def execute_command(message: Message):
     command_response_event.clear()
     command_request_event.clear()
@@ -107,7 +109,7 @@ async def execute_command(message: Message):
     client = clients[message.sender]
     command_data = message_data.removeprefix(Commands.prefix).split()
     function_name = command_data[0]
-    try:
+    try: # Tries getting the command, else its not a true command
         command_permission_level = Commands.commands[function_name][1]
         show_usage = Commands.commands[function_name][2]
     except KeyError:
@@ -123,7 +125,7 @@ async def execute_command(message: Message):
     await update_command_history(client, command_data)
     await send(client, message, to_channel=show_usage)
 
-    if function_name in Commands.killed_commands:
+    if function_name in Commands.killed_commands: #Killed commands are just disabled. No one can use them
         message = Message(
             sender='Server',
             message=f"Command: {function_name} is disabled.",
@@ -143,7 +145,7 @@ async def execute_command(message: Message):
         await send(client, message, to_channel=show_usage)
         return
 
-    function_data = inspect.getfullargspec(function)
+    function_data = inspect.getfullargspec(function) # This gets argument and varargs
     args = function_data.args
     varargs = function_data.varargs
 
@@ -180,7 +182,15 @@ async def execute_command(message: Message):
         else:
             await function(*parameters)
 
-#
+#To make a basic command
+# Show usage shows the actual typing of the command to other users. NOT the output
+@Commands.command("test", permission=1, show_usage=True, slash_command=True)
+async def test(client):
+    text = 'This is a test command'
+    message = Message(sender="Server", message=test, message_type=Message.CHAT, post_flag=True)
+    await send(client=client, message=message, to_channel=True, to_all=False) # Sends to all in channel. 
+
+#Broadcasts a comand to the channel
 @Commands.command("broadcast", 2, show_usage=False)
 async def broadcast_command(client, *message):
     if len(message) > 0:
@@ -189,7 +199,7 @@ async def broadcast_command(client, *message):
 
     await send(client, message, to_channel=True)
 
-#
+#Gives a list of users to the user
 @Commands.command("users", 1, show_usage=False)
 async def users_online(client):
 
@@ -198,22 +208,22 @@ async def users_online(client):
     message = Message(sender="Server", message=message_data, message_type=Message.CHAT, time=time.time(), post_flag=True)
     await send(client, message)
 
-#
-@Commands.command("channels", 1)
+# Shows a list of channels to all users in channel if using a CLI client
+@Commands.command("channels", 1, show_usage=True, slash_command=True)
 async def get_channels(client):
     channel_list = [x for x in channels.keys()]
     message_data = f"Channels: {channel_list}"
     message = Message(sender="Server", message=message_data, message_type=Message.CHAT, time=time.time(), post_flag=True)
     await send(client, message, to_channel=True)
 
-#
-@Commands.command("user-count", 5)
+# Gives a user count
+@Commands.command("user-count", 5, show_usage=True, slash_command=True)
 async def users_online(client):
     message = f"Number of users online: {len(clients)}"
     message = Message(sender="Server", message=message, message_type=Message.CHAT, time=time.time(), post_flag=True)
     await send(client, message, to_channel=True)
 
-#
+# Shows a list of banned users to the client
 @Commands.command("banned-users", 5, show_usage=False)
 async def users_banned(client):
     banned_list = [x for x in banned_users]
