@@ -45,3 +45,16 @@ QToolButton:hover,
 QRadioButton:hover {
     background-color: #404040;
 }
+
+#usernamelist {
+    border-right: 1px solid #454141;
+  }
+    
+  #userslabel, #channelslabel {
+  border: 1px solid #454141;
+  }
+    
+  #messageslist, #channelslabel, #channelslist, #onlineuserslist{
+  border-left: 1px solid #454141;
+  border-right: 1px solid #454141;
+  }
