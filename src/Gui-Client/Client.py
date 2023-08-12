@@ -1,5 +1,3 @@
-from typing import Optional
-import PySide6.QtGui
 from PySide6.QtWidgets import QMessageBox
 from PySide6 import QtWidgets, QtNetwork, QtGui, QtCore
 from PySide6.QtWidgets import QFileDialog
@@ -281,7 +279,7 @@ class Main:
         self.settings_window.ui.themeComboBox.setCurrentIndex(1)
 
         self.Ui_dialog = Ui_Dialog()
-        self.prefix = "/"
+        self.prefix = "//"
         self.slash_commands = None
         self.suggestion_clicked = False
 
@@ -357,6 +355,8 @@ class Main:
 
     # Whenever a key is pressed this will check and see if there is a slash command
     def update_auto_complete(self):
+        self.slash_commands = ['help', 'ban', 'test', 'test2']
+        self.prefix = '//'
         cursor = self.chat_window.ui.inputbox.textCursor()
         if self.suggestion_clicked:
             self.chat_window.ui.suggestionlist.clear()
@@ -387,8 +387,9 @@ class Main:
             if suggestions_list:
                 item_height = self.chat_window.ui.suggestionlist.sizeHintForRow(0)
                 item_count = self.chat_window.ui.suggestionlist.count()
-                self.chat_window.ui.suggestionlist.setFixedHeight((item_count * item_height) + 5)
-                self.chat_window.ui.suggestionlist.move(self.chat_window.ui.inputbox.x(),self.chat_window.ui.messageslist.height())
+                height = (item_count * item_height) + 5
+                self.chat_window.ui.suggestionlist.setFixedHeight(height)
+                self.chat_window.ui.suggestionlist.move(self.chat_window.ui.inputbox.x(), self.chat_window.ui.messageslist.height()-height+20)
                 self.chat_window.ui.suggestionlist.raise_()
 
     def chat_key_press(self, event: QtGui.QKeyEvent):
@@ -422,7 +423,7 @@ class Main:
             )
 
             self.send_message(message)
-
+            self.chat_window.ui.suggestionlist.lower()
             self.chat_window.ui.inputbox.clear()
 
     # This is for updating all incoming messages such as dates list and more (Buggy after using large texts, math is off i think)
