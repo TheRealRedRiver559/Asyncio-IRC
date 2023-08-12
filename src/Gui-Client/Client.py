@@ -15,6 +15,7 @@ import time
 import datetime
 import csv
 from pathlib import Path
+import os
 
 # Opens a link
 def open_link(link):
@@ -49,10 +50,18 @@ def show_message(message, title="Connection"):
     info_dialog.setText(message)
     info_dialog.exec()
 
-# Loading themes
-dark_theme = load_theme(Path(r"src\Clients\Gui-Client\Themes\dark.qss").absolute())
-light_theme = load_theme(Path(r"src\Clients\Gui-Client\Themes\light.qss").absolute())
-yami_theme = load_theme(Path(r"src\Clients\Gui-Client\Themes\yami.qss").absolute())
+script_dir = Path(os.path.dirname(os.path.abspath(__file__)))
+
+# Construct paths to the theme files relative to the script directory
+themes_dir = script_dir / "Themes"
+dark_theme_path = themes_dir / "dark.qss"
+light_theme_path = themes_dir / "light.qss"
+yami_theme_path = themes_dir / "yami.qss"
+
+# Now load the themes
+dark_theme = load_theme(dark_theme_path)
+light_theme = load_theme(light_theme_path)
+yami_theme = load_theme(yami_theme_path)
 
 # Using an override to check for a shift + enter on the input (multiple lines)
 class PlainTextEdit(QtWidgets.QPlainTextEdit):
@@ -888,5 +897,5 @@ class Main:
 
 app = QtWidgets.QApplication([])
 main = Main()
-main.chat_window.show()
+main.connect_window.show()
 app.exec()
