@@ -7,7 +7,7 @@ import ssl
 from misc.Temp import clients, banned_users, Channel, Message, Client, Status,\
     command_response_event, command_request_event, Output, main_channel,send_message
 
-# version 1.6
+# version 1.6.2
 
 # this is a test server, some things may and will break
 # also a lot of things will be changed in the future such as message formats, commands etc.
