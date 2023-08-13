@@ -185,7 +185,7 @@ async def test(client, x=10):
     await send(client=client, message=message, to_channel=True, to_all=False) # Sends to all in channel. 
 
 #Broadcasts a comand to the channel
-@Commands.command("broadcast", 2, show_usage=False)
+@Commands.command("broadcast", 1, show_usage=False)
 async def broadcast_command(client, *message):
     if len(message) > 0:
         message = " ".join(message)
@@ -211,14 +211,14 @@ async def get_channels(client):
     await send(client, message, to_channel=True)
 
 # Gives a user count
-@Commands.command("user-count", 5, show_usage=True, slash_command=True)
+@Commands.command("user-count", 1, show_usage=True, slash_command=True)
 async def users_online(client):
     message = f"Number of users online: {len(clients)}"
     message = Message(sender="Server", message=message, message_type=Message.CHAT, time=time.time(), post_flag=True)
     await send(client, message, to_channel=True)
 
 # Shows a list of banned users to the client
-@Commands.command("banned-users", 5, show_usage=False)
+@Commands.command("banned-users", 1, show_usage=False)
 async def users_banned(client):
     banned_list = [x for x in banned_users]
     message = f"Banned Users: {banned_list}"
@@ -254,7 +254,7 @@ async def ban_user(client, *data):
     await send(client, message, to_channel=True)
 
 #
-@Commands.command("unban", 5)
+@Commands.command("unban", 1)
 async def unban_user(client, *data):
     message = Message(sender="Server", message='', message_type=Message.INFO, time=time.time(), post_flag=True)
     target_username = data[0]
@@ -280,7 +280,7 @@ async def help(client):
     await send_message(client, message)
 
 #
-@Commands.command("set-prefix", 5, show_usage=False)
+@Commands.command("set-prefix", 1, show_usage=False)
 async def change_prefix(client, prefix):
     Commands.prefix = prefix
     message_data = f"Prefix has been changed to: {prefix}"
@@ -288,7 +288,7 @@ async def change_prefix(client, prefix):
     await send_message(client, message)
 
 #
-@Commands.command("disable-command", 5, show_usage=False)
+@Commands.command("disable-command", 1, show_usage=False)
 async def turn_off_command(client, command_name):
     message = Message(sender="Server", message='', message_type=Message.CHAT, time=time.time(), post_flag=True)
     if command_name in Commands.commands:
@@ -306,7 +306,7 @@ async def turn_off_command(client, command_name):
     await send(client, message)
 
 #
-@Commands.command("enable-command", 5, show_usage=False)
+@Commands.command("enable-command", 1, show_usage=False)
 async def turn_on_command(client, command_name):
     message = Message(sender="Server", message='', message_type=Message.CHAT, time=time.time(), post_flag=True)
     if command_name in Commands.commands:
@@ -419,7 +419,7 @@ async def change_user_perm(client, target_username, permission_level):
     await send(client, message)
 
 #
-@Commands.command("command-history", 5, show_usage=False)
+@Commands.command("command-history", 1, show_usage=False)
 async def show_client_command_history(client):
 
 
