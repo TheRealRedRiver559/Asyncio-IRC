@@ -113,6 +113,7 @@ class ChatWindow(QtWidgets.QMainWindow):
         self.ui = Ui_ChatWindow()
         self.ui.setupUi(self)
         self.ui.suggestionlist = QtWidgets.QListWidget(self)
+        self.ui.suggestionlist.setGeometry(0,0,200,1)
         self.ui.suggestionlist.lower()
 
     def clear_page(self):
@@ -213,6 +214,8 @@ class Main():
         self.current_window = None #Not used at the moment
         self.logged_in = False
         self.users_list = [] #This list gets updated by the server
+        self.slash_commands = []
+        self.prefix = '//'
 
         self.client = Client()
         self.ssl_path = "/path/to/ssl/key/file.pem" # SLL is disabled at the moment
@@ -289,9 +292,6 @@ class Main():
 
         self.slash_commands = None
         self.suggestion_clicked = False
-
-        self.prefix = "//" #example prefix
-        self.slash_commands = ['help', 'ban', 'test'] #example commands
         channel_item_1 = QtWidgets.QListWidgetItem("Channel1")
         channel_item_2  = QtWidgets.QListWidgetItem("Channel2")
         self.chat_window.ui.channelslist.addItem(channel_item_1)
@@ -373,9 +373,6 @@ class Main():
 
     # Whenever a key is pressed this will check and see if there is a slash command
     def update_auto_complete(self):
-        self.slash_commands = ['help', 'ban', 'test', 'test2']
-        self.prefix = '//'
-        cursor = self.chat_window.ui.inputbox.textCursor()
         if self.suggestion_clicked:
             self.chat_window.ui.suggestionlist.clear()
             self.suggestion_clicked = False
