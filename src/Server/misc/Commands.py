@@ -1,7 +1,7 @@
 import inspect
 import time
 
-from Temp import (
+from misc.Temp import (
     clients,
     banned_users,
     channels,
@@ -108,8 +108,8 @@ async def execute_command(message: Message):
     message_data = message.message
     client = clients[message.sender]
     command_data = message_data.removeprefix(Commands.prefix).split()
-    function_name = command_data[0]
     try: # Tries getting the command, else its not a true command
+        function_name = command_data[0]
         command_permission_level = Commands.commands[function_name][1]
         show_usage = Commands.commands[function_name][2]
     except KeyError:
@@ -135,6 +135,12 @@ async def execute_command(message: Message):
         return
 
     function = Commands.commands[function_name][0]
+    func_data = inspect.getfullargspec(function)
+    func_defualts = func_data.defaults or []
+    func_args = func_data.args
+    func_defualts = []
+    if len(func_args) > 0:
+        func_defualts = func_args[len(func_args)-len(func_defualts):]
 
     if client.permission_level < command_permission_level:
         message = Message(
@@ -145,21 +151,17 @@ async def execute_command(message: Message):
         await send(client, message, to_channel=show_usage)
         return
 
-    function_data = inspect.getfullargspec(function) # This gets argument and varargs
-    args = function_data.args
-    varargs = function_data.varargs
-
-    pass_client = "client" in args
+    pass_client = "client" in func_args
     if pass_client:
-        args.remove("client")
+        func_args.remove("client")
 
+    data_args = []
     if len(command_data) > 1:
-        parameters = command_data[1:]
-    else:
-        parameters = []
-
-    if len(parameters) < len(args):
-        missing_parameters = args[len(parameters):]
+        data_args = command_data[1:]
+    required_args = len(func_args) - len(func_defualts)
+    
+    if len(data_args) < required_args:
+        missing_parameters = func_args[:required_args]
         message = Message(
             sender="Server",
             message=f"Missing parameter(s): {', '.join(missing_parameters)}",
@@ -168,24 +170,16 @@ async def execute_command(message: Message):
         )
         await send(client, message)
         return
-
-    if varargs or parameters:
-        arg_parameters = parameters[:len(args)]
-        varargs_parameters = parameters[len(args):]
-        if pass_client:
-            await function(client, *arg_parameters, *varargs_parameters)
-        else:
-            await function(*arg_parameters, *varargs_parameters)
+    
+    if pass_client:
+        await function(client, *data_args)
     else:
-        if pass_client:
-            await function(client)
-        else:
-            await function(*parameters)
+        await function(*data_args)
 
 #To make a basic command
 # Show usage shows the actual typing of the command to other users. NOT the output
 @Commands.command("test", permission=1, show_usage=True, slash_command=True)
-async def test(client):
+async def test(client, x=10):
     text = 'This is a test command'
     message = Message(sender="Server", message=test, message_type=Message.CHAT, post_flag=True)
     await send(client=client, message=message, to_channel=True, to_all=False) # Sends to all in channel. 
@@ -328,7 +322,7 @@ async def turn_on_command(client, command_name):
 
 #
 @Commands.command("join-channel", 1, show_usage=False)
-async def join_channel(client, channel_name):
+async def join_channel(client, channel_name, password=None):
     message = Message(sender="Server", message=f"You have joined the channel named, {channel_name}.", message_type=Message.CHAT, time=time.time(), post_flag=True)
     
     if channel_name in channels.keys():
@@ -337,10 +331,16 @@ async def join_channel(client, channel_name):
             message.message = f"You are already in this channel."
             message.message_type = Message.CHAT
         else:
-            await channel.add_user(client)
+            if channel.password_protected:
+                if password == channel.password:
+                    await channel.add_user(client)
+                elif password is None:
+                    message.message = f"This channel is password protected."
+                else:
+                    message.message = f"Incorrect Password."                    
+
             
     else:
-        message.message_type = Message.CHAT
         message.message = f"The channel {channel_name}, does not exist."
 
     await send(client, message)
@@ -360,12 +360,17 @@ async def leave_channel(client):
 
 #
 @Commands.command("create-channel", 1)
-async def create_channel(client, channel_name):
+async def create_channel(client, channel_name, password=None):
     message = Message(sender="Server", message='', message_type=Message.CHAT, time=time.time(), post_flag=True)
     if channel_name in channels.keys() or channel_name == main_channel.name:
         message.message = f"The channel {channel_name}, already exists."
     else:
         channel = Channel(channel_name)
+        if password is not None:
+            password = str(password)
+            channel.password_protected = True
+            channel.password = password
+
         channels[channel_name] = channel
         message.message = f"The channel {channel_name}, has been created."
         await Channel.update_channels()
