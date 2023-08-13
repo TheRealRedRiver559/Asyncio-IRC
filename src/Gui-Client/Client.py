@@ -6,13 +6,14 @@ from Login.LoginWindow_ui import Ui_LoginWindow
 from Chat.ChatWindow_ui import Ui_ChatWindow
 from Settings.settings_ui import Ui_SettingsForm
 from Dialog.rightClickUI import Right_Ui_Dialog
-from Dialog.createchannel import CreatChannelWindow
+from Dialog.createchannel import CreateChannelWindow
 from Dialog.joinchannel import JoinChannelWindow
 import json
 import time
 import datetime
 import csv
 from pathlib import Path
+import math
 import os
 
 # Opens a link
@@ -191,9 +192,16 @@ class Ui_Dialog(QtWidgets.QDialog):
         self.ui: QtWidgets.QDialog = Right_Ui_Dialog()
         self.ui.setupUi(self)
 
+class Ui_CreateChannel(QtWidgets.QDialog):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.ui: QtWidgets.QDialog = CreateChannelWindow()
+        self.ui.setupUi(self)
+
 # This main class holds all instances and main methods
-class Main:
-    def __init__(self):
+class Main():
+    def __init__(self, app:QtWidgets.QApplication):
+        self.application = app
         self.tcp_socket = None # Socket
         self.selected_row = None # This is for the connection window and joining
         self.current_theme = "Dark"
@@ -211,7 +219,8 @@ class Main:
         self.ping = None
         self.current_channel = None
         self.ssl_active = False # Leave this off and dont press the radio button as the server does not use SSL right now
-        monospaced_font = QtGui.QFont("Iosevka", 10)
+        self.monospaced_font = QtGui.QFont("Iosevka", 10)
+        self.font_metrics = QtGui.QFontMetrics(self.monospaced_font)
 
         # Settings Window
         self.settings_window = SettingsWindow()
@@ -249,11 +258,11 @@ class Main:
         self.chat_window.ui.sendbutton.clicked.connect(self.send_button_pressed)
         self.chat_window.ui.clearbutton.clicked.connect(self.clear_input_pressed)
         self.chat_window.ui.inputbox.keyPressEvent = self.chat_key_press
-        self.chat_window.ui.messageslist.setFont(monospaced_font)
-        self.chat_window.ui.dateslist.setFont(monospaced_font)
-        self.chat_window.ui.usernamelist.setFont(monospaced_font)
-        self.chat_window.ui.onlineuserslist.setFont(monospaced_font)
-        self.chat_window.ui.inputbox.setFont(monospaced_font)
+        self.chat_window.ui.messageslist.setFont(self.monospaced_font)
+        self.chat_window.ui.dateslist.setFont(self.monospaced_font)
+        self.chat_window.ui.usernamelist.setFont(self.monospaced_font)
+        self.chat_window.ui.onlineuserslist.setFont(self.monospaced_font)
+        self.chat_window.ui.inputbox.setFont(self.monospaced_font)
         self.chat_window.ui.suggestionlist.currentItemChanged.connect(self.suggestion_click)
         self.chat_window.ui.onlineuserslist.setContextMenuPolicy(QtCore.Qt.ContextMenuPolicy.CustomContextMenu)
         self.chat_window.ui.channelslist.setContextMenuPolicy(QtCore.Qt.ContextMenuPolicy.CustomContextMenu)
@@ -278,10 +287,15 @@ class Main:
         self.handle_theme_change("Dark")
         self.settings_window.ui.themeComboBox.setCurrentIndex(1)
 
-        self.Ui_dialog = Ui_Dialog()
-        self.prefix = "//"
         self.slash_commands = None
         self.suggestion_clicked = False
+
+        self.prefix = "//" #example prefix
+        self.slash_commands = ['help', 'ban', 'test'] #example commands
+        channel_item_1 = QtWidgets.QListWidgetItem("Channel1")
+        channel_item_2  = QtWidgets.QListWidgetItem("Channel2")
+        self.chat_window.ui.channelslist.addItem(channel_item_1)
+        self.chat_window.ui.channelslist.addItem(channel_item_2)
 
     def show_user_context(self, point): # When you right click on a user WIP (not working fully)
         item = self.chat_window.ui.onlineuserslist.itemAt(point)
@@ -330,13 +344,17 @@ class Main:
         channel = self.channel_to_join.text()
         if self.client.current_channel == channel:
             pass
-    
+
     #WIP
     def leave_channel_event(self, event):
         print('left')
     #WIP
     def create_channel_event(self, event):
-        print('left')
+        self.create_channel_window = Ui_CreateChannel()
+        self.create_channel_window.setWindowFlags(QtCore.Qt.Tool)
+        #self.create_channel_window.setFocusPolicy(QtCore.Qt.StrongFocus)
+        self.create_channel_window.activateWindow()
+        self.create_channel_window.show()
         
     # When you click on a suggestion inside the suggestion box it will paste the text
     def suggestion_click(self, item):
@@ -434,25 +452,32 @@ class Main:
         messages_list: QtWidgets.QListWidget = self.chat_window.ui.messageslist
         times_list: QtWidgets.QListWidget = self.chat_window.ui.dateslist
         usernames_list: QtWidgets.QListWidget = self.chat_window.ui.usernamelist
+        
 
         list_lines = 0
-        widget_length = 98
+        max_chars = (messages_list.viewport().size().width() // self.font_metrics.averageCharWidth())-18
         lines = message.message.split("\n")
-        for element in reversed(lines):
-            if element.strip() == "":
-                lines.pop()
-            else:
-                break
+        if len(lines)>1:
+            for element in reversed(lines):
+                if element.strip() == "":
+                    lines.pop()
+                else:
+                    break
 
         for line in lines:
-            list_lines += len(line) // widget_length
+            new_lines = len(line) / max_chars
+            if new_lines > 1:
+                list_lines += (math.ceil(new_lines))
+                
 
         message.message = "\n".join(lines)
-        line_count = len(lines)
+        line_count = len(lines)-1
 
         new_message = list(message.message)
-        for i in range(1, list_lines + 1):
-            new_message.insert(i * widget_length - 1, " ")
+        if list_lines > 1:
+            for i in range(1,list_lines):
+                print(i*max_chars, 't')
+                new_message.insert(i * (max_chars), "\n")
         message_data = "".join(new_message)
 
         line_count += list_lines
@@ -461,8 +486,8 @@ class Main:
         unix_time = message.time
         date_time = datetime.datetime.fromtimestamp(int(float(unix_time))).strftime("%m/%d/%Y %#I:%M:%S %p")
 
-        username_item = QtWidgets.QListWidgetItem(username + ((line_count - 1) * "\n"))
-        time_item = QtWidgets.QListWidgetItem(date_time + ((line_count - 1) * "\n"))
+        username_item = QtWidgets.QListWidgetItem(username + ((line_count) * "\n"))
+        time_item = QtWidgets.QListWidgetItem(date_time + ((line_count) * "\n"))
         message_item = QtWidgets.QListWidgetItem(message_data)
         times_list.addItem(time_item)
         usernames_list.addItem(username_item)
@@ -594,6 +619,7 @@ class Main:
             self.login_window.setStyleSheet(yami_theme)
             self.settings_window.setStyleSheet(yami_theme)
             self.chat_window.setStyleSheet(yami_theme)
+
 
     def save_settings(self):
         theme = self.settings_window.ui.themeComboBox.currentText()
@@ -897,6 +923,6 @@ class Main:
 
 
 app = QtWidgets.QApplication([])
-main = Main()
+main = Main(app)
 main.connect_window.show()
 app.exec()
