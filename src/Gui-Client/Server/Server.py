@@ -7,7 +7,7 @@ import ssl
 from misc.Temp import clients, banned_users, Channel, Message, Client, Status,\
     command_response_event, command_request_event, Output, main_channel,send_message
 
-# version 1.6
+# version 1.6.2
 
 # this is a test server, some things may and will break
 # also a lot of things will be changed in the future such as message formats, commands etc.
@@ -122,17 +122,13 @@ async def send_connect_data(client:Client):
 
 async def send_details(client:Client):
     client_perm = client.permission_level
-    commands = []
-    channel_permissions = []
-    for command_name in ["create-channel", "leave-channel", "delete-channel","join-channel"]:
-        if Commands.Commands.commands[command_name][1] <= client.permission_level:
-            channel_permissions.append(command_name)
-    print(channel_permissions)
-    user_permissions = ["ban", "unban"]
+    slash_commands = []
     for name, command_perm in Commands.Commands.slash_commands.items(): # name, permission_level
         if client_perm >= command_perm:
-            commands.append(name)
-    data = {"prefix": Commands.Commands.prefix, "slash_commands": commands}
+            slash_commands.append(name)
+    print(Commands.Commands.slash_commands.items())
+    print(slash_commands)
+    data = {"prefix": Commands.Commands.prefix, "slash_commands": slash_commands}
     await send_message(client, 
         Message(
             sender="Server", message=data, message_type=Message.INFO, post_flag=True
