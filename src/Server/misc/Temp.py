@@ -1,7 +1,7 @@
 import json
 import time
 import asyncio
-from settings import Settings
+from misc.settings import Settings
 
 
 # temp solution to having 2 files needing access to the same data and
@@ -140,9 +140,11 @@ class Client:
             await self.writer.wait_closed()
 
 class Channel:
-    def __init__(self, name):
+    def __init__(self, name, private_channel=False, channel_password=None):
         self.name = name
         self.clients = []
+        self.password_protected = private_channel
+        self.password = channel_password
         channels[name] = self
     
     async def send(self, message:Message):
