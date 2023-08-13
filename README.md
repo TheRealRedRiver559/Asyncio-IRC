@@ -55,7 +55,7 @@ To Add
 - [X] GUI for clients
 - [ ] Server clustering for load balancing and to create larger networks.
 - [X] Private Channels
-- [ ] Message control features for server side (Allows complex functions and commands that can recieve input and responses) I will use Asyncio.Event() for this 
+- [X] Message control features for server side (Allows complex functions and commands that can recieve input and responses) I will use Asyncio.Event() for this 
 
 To Fix
 - [x] Better performance with multiple users (Async will help a lot)
