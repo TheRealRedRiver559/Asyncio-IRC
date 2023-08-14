@@ -1,76 +1,67 @@
 # TCP-Chat-Server
-This TCP chat server is an ongoing project and really just a nice learning experience for me and an intro into networking. I plan on adding tons of features in the fute and re-writing all of the code to make it run asynchrously and with much more security of course. This was just a small project at first but branched out as one of my main ones and I really enjoy working on this. Any help or advice to make this any better is always appreciated!
 
-For non-SSL go to the Async Branch
+## Introduction
+TCP-Chat-Server is a Python-based chat server designed to facilitate real-time communication over a network. This project offers a proof-of-concept implementation with various features, including customizable commands, channel management, private channels, and more. While primarily developed for fun and practice, it showcases the potential for building more advanced chat systems.
 
-There is now a GUI folder that contains a work in progress GUI. This is still in testing and devolupment so it may crash or have unexpecuted behavour and updated on GitHub.
+## Setup and Usage
+- Dependencies: Ensure you have the required dependencies installed by checking the Requirements.txt file.
+- Configuration: Open the Server.py and Client.py files to set the IP address of the hosting device. SSL (Secure Sockets Layer) is optional and can be configured by generating self-signed certificates for secure communication.
+- Starting the Server: Run the Server.py file on your chosen device. For some network configurations, port forwarding might be necessary to allow incoming connections.
+- Client Login: The client prompts for a username and password for login, although they are not essential for the proof-of-concept nature of the project.
+- Channel Management: The server supports creating, joining, leaving, and deleting channels. Channels allow users to organize and interact in distinct conversation spaces.
+- Customizable Commands: The chat system boasts a simple yet extensible command system. New commands can be easily added by modifying the Commands.py file, with the possibility of more complex functionality.
+- Private Channels: Private channels provide a secure space for specific users to engage in confidential conversations.
+- Message Broadcasting: The server enables broadcasting messages to all connected clients.
+- User Management: Obtain lists of online users, user counts, and banned users.
 
-# Setup
-
-Be sure to install the Requirments and that you have all the required dependicies installed.
-
-Start the Server.py file either on some sort computer, workstation or server. Depending on your network you ay have to port forward or open up certain parts of your network for this to work. If you have an ordinary home router with no configs, you just need to set the ip address to whatever host you use. Set the IP of the hosting device on the Server.py and the Client.py. 
-After these steps you can either start the Server or Client, the client will keep trying to connect if the server is down so it doens really matter. 
-SSL is optional, you will have to self sign certs if you would like to do that until I port this to WebSockets so its automatic. 
-
-The client will ask for a username and password to login, these values do NOT matter since this is a proof of concept type of project. 
-Most settings and options are configurable in the Server.py and Commands.py file such as message logging, and more. 
-You can add commnads very easily due to the simple decorator system I have in place. 
-
-# Command Usage
-Commands are stored in the Commands.py file. Here you can edit command functionality easily and change whatever you want. There is a Temp.py file acting as a intermdiary for the Commands and Server file. This file stores some client information and general data sets. Kind of like a local mini data base. 
-
-Command Usage is pretty simple. The defualt prefix is a double forward slash: //. The commands and arguments are as follow :
-<> = Required, () = optional
-
-help   ->  returns a useful list of available commands and their usages.
-create-channel <channel name>  ->   Creates a channel with the specified name.
-join-channel <channel name>   ->  Joins specified channel.
-}leave-channel  ->  leaves the current channel you are in. 
-delete-channel <channel name>   ->  Deletes the specified channel name if it exists.
-users  ->  returns a list of all online users in the server.
-user-count     ->  returns a numeric amount of users online.
-banned-users   ->  returns a list of all banned-users.
-broadcast <message>    ->  broadcasts a message as the server.
-ban <username> (reason)    ->  bans a user with an optional reason.
-unban <username> ->    unbans a specified user.
-disable-command <command name>     ->  diables the specified command.
-enable-command <command name>  ->  enables the specified command."""
+## Showcase and Images
+![image](https://github.com/TheRealRedRiver559/Asyncio-TCP/assets/80642468/3ef6d58b-c7da-46ff-9c37-bc90662d265a)
+![image](https://github.com/TheRealRedRiver559/Asyncio-TCP/assets/80642468/f5641986-9837-49f9-bfd1-53ce6ff964c4)
+![image](https://github.com/TheRealRedRiver559/Asyncio-TCP/assets/80642468/6422c391-018c-4da7-88c2-6c3801c2bee0)
 
 
+
+<div style="display: flex;">
+  <img src="https://github.com/TheRealRedRiver559/Asyncio-TCP/blob/master/assets/80642468/3ef6d58b-c7da-46ff-9c37-bc90662d265a.png" alt="Image 1" style="width: 33%; padding: 5px;">
+  <img src="https://github.com/TheRealRedRiver559/Asyncio-TCP/blob/master/assets/80642468/f5641986-9837-49f9-bfd1-53ce6ff964c4.png" alt="Image 2" style="width: 33%; padding: 5px;">
+  <img src="https://github.com/TheRealRedRiver559/Asyncio-TCP/blob/master/assets/80642468/6422c391-018c-4da7-88c2-6c3801c2bee0.png" alt="Image 3" style="width: 33%; padding: 5px;">
+</div>
+
+## Command Usage
+The defualt commands are structured as follows:
+
+- help: Display a list of available commands and their usages.
+- create-channel <channel name>: Create a new channel with the specified name.
+- join-channel <channel name>: Join a specified channel.
+- leave-channel: Leave the current channel.
+- delete-channel <channel name>: Delete an existing channel.
+- users: List all online users.
+- user-count: Display the count of online users.
+- banned-users: List banned users.
+- broadcast <message>: Send a message to all users.
+- ban <username> (reason): Ban a user with an optional reason.
+- unban <username>: Unban a previously banned user.
+- disable-command <command name>: Disable a specified command.
+- enable-command <command name>: Enable a previously disabled command.
 # Recent Updates
-- Added a new ping system for clients that did not close.
-- New WIP GUI.
-- New messaging format for server-client messages
-- Added type hints and some documentation
+- Added private and password-protected channels.
+- New updates relating the GUI. It now features auto suggestions.
+- Added a ping system to handle unresponsive clients.
+- Incorporation of type hints and documentation to enhance code clarity.
+### Future updates and improvements include:
+- Implementing SSL/TLS for enhanced security during data transmission.
+- Incorporating an SQL database for secure hashed and salted logins.
+- Finishing the GUI
+- Adding a public server that anyone can join!
+## Known Issues
+While efforts have been made to ensure stability, some issues have been identified and are being addressed:
+- Server crashes when trying to access and change data storage
+- Improved performance is being sought for scenarios involving multiple users.
+- Addressing intermittent connection interruptions.
+- Further refining color checks and metadata in messages.
+- Continuously resolving any unidentified errors.
 
-# Todo and Future
-To Add
-- [x] Commands
-- [x] Login System with password
-- [x] Color Checks for usernames 
-- [x] Re-write using Asnyio and better more documented code.
-- [x] More commands and a new system to send data across networks. (SSL / TSL)
-- [ ] An SQL database for hashed + salted logins.
-- [X] GUI for clients
-- [ ] Server clustering for load balancing and to create larger networks.
-- [X] Private Channels
-- [X] Message control features for server side (Allows complex functions and commands that can recieve input and responses) I will use Asyncio.Event() for this 
+# Note
+TCP-Chat-Server is an ongoing project, and user suggestions and contributions are welcomed. Please be aware that this system is not intended for secure or critical applications due to potential vulnerabilities and limitations.
 
-To Fix
-- [x] Better performance with multiple users (Async will help a lot)
-- [x] Connections being interupted
-- [x] Color checks and meta data in messages
-- [ ] Any erros still missing that havent been updated...
-Some current bugs are as follows -
-  None at the moment!
-  
-I plan on adding tons of new stuff and cool features so any suggestions are awesome! This is by no means a secure server or anything like that, i just made it for fun and practice. Im sure there are multiple vulnerabilities and issues so i advise not using this for anything serious.
-Enjoy!
-
-
-# Examples or images
-![image-7](https://github.com/TheRealRedRiver559/Asyncio-TCP/assets/80642468/6b9ec54d-2600-4f8f-a9ec-5c51e41558d7)
-![image-8](https://github.com/TheRealRedRiver559/Asyncio-TCP/assets/80642468/8460739d-17d7-4ff9-b333-d977a07d3e4a)
-![image](https://github.com/TheRealRedRiver559/Asyncio-TCP/assets/80642468/e4103b6e-90ef-4f5f-bbb3-cd3d69b4f935)
-
+Enjoy the experience of exploring and contributing to this evolving chat server project!
