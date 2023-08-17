@@ -2,7 +2,7 @@
 from PySide6 import QtCore, QtGui, QtWidgets
 
 
-class CreatChannelWindow(object):
+class CreateChannelWindow(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
         Dialog.resize(202, 157)
@@ -178,7 +178,7 @@ if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
     Dialog = QtWidgets.QDialog()
-    ui = CreatChannelWindow()
+    ui = CreateChannelWindow()
     ui.setupUi(Dialog)
     Dialog.show()
     sys.exit(app.exec())
