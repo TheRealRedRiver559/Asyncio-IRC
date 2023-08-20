@@ -1,16 +1,15 @@
 import asyncio
 import misc.Commands as Commands
 import time
-
+#from passlib.hash import argon2
 
 import ssl
 from misc.Temp import clients, banned_users, Channel, Message, Client, Status,\
-    command_response_event, command_request_event, Output, main_channel,send_message
+    command_response_event, command_request_event, Output, main_channel,send_message, lock
 
-# version 1.6.2
-
-# this is a test server, some things may and will break
-# also a lot of things will be changed in the future such as message formats, commands etc.
+# WARNING
+# This is a test server, there is currently no encrpytion or checks to prevent agasint exploits
+# Please do no tuse this for any purpose except for learning at the moment. It is still in devolopment!
 
 host, port = ("localhost", 9090)
 
@@ -21,51 +20,45 @@ cert, key = "./certs/cert.pem", "./certs/private.key"  # self signed cert, and
 
 ssl_connection = False
 
-# This is a timer that sends out messages to the client every (n) seconds to make sure it's still active.
 async def keep_alive_timer():
     while True:
-        clients_copy = clients.copy()
-        for client in clients_copy.values():
-            if client.connected:
-                if client.pong_received:
-                    client.pong_received = False
-                else:
-                    await client.leave()
+        async with lock:
+            for client in clients.values():
+                if client.connected:
+                    if client.pong_received:
+                        client.pong_received = False
+                    else:
+                        await client.leave()
 
-                client.time = time.time()
-                message = Message(
-                    sender="Server",
-                    message="Ping",
-                    message_type=Message.SYN,
-                    time=time.time(),
-                    post_flag=True,
-                )
-                await send_message(client, message)
+                    client.time = time.time()
+                    message = Message(sender="Server",message="Ping",message_type=Message.SYN,time=time.time(),post_flag=True)
+                    await send_message(client, message)
 
         await asyncio.sleep(5)
 
 
 async def broadcast(message : Message, to_all=False, channel=main_channel):
-    sender = message.sender
-    if to_all:
-        for client in clients.values():
-            await send_message(client, message)
-            return
-            
-    if isinstance(sender, Client):
-        client = sender
-        channel :Channel= client.current_channel
-        print(channel, channel.name, channel.clients)
+    async with lock: # They all use the clients dict so I just lock this entire block
+        sender = message.sender
+        if to_all:
+            for client in clients.values():
+                await send_message(client, message)
+                return
+                
+        if isinstance(sender, Client):
+            client = sender
+            channel :Channel= client.current_channel
+            print(channel, channel.name, channel.clients)
 
-        for client in channel.clients:
-            await send_message(client, message)
-    elif sender in clients:
-        client = clients[sender]
-        channel :Channel= client.current_channel
-        await channel.send(message)
-    else:
-        for client in clients.values():
-            await send_message(client, message)
+            for client in channel.clients:
+                await send_message(client, message)
+        elif sender in clients:
+            client = clients[sender]
+            channel :Channel= client.current_channel
+            await channel.send(message)
+        else:
+            for client in clients.values():
+                await send_message(client, message)
 
 
 async def handle_client(client: Client):
@@ -80,7 +73,7 @@ async def handle_client(client: Client):
         if command_request_event.is_set():
             if message.message_type != Message.ACK:
                 Output.command_output = message
-                command_response_event.set()
+                command_response_event.set() # TODO make this not a global event, very easy (accidentlly made public interactions)
                 continue
 
         if len(message_data) > message_size:
@@ -122,17 +115,11 @@ async def send_connect_data(client:Client):
 
 async def send_details(client:Client):
     client_perm = client.permission_level
-    commands = []
-    channel_permissions = []
-    for command_name in ["create-channel", "leave-channel", "delete-channel","join-channel"]:
-        if Commands.Commands.commands[command_name][1] <= client.permission_level:
-            channel_permissions.append(command_name)
-    print(channel_permissions)
-    user_permissions = ["ban", "unban"]
+    slash_commands = []
     for name, command_perm in Commands.Commands.slash_commands.items(): # name, permission_level
         if client_perm >= command_perm:
-            commands.append(name)
-    data = {"prefix": Commands.Commands.prefix, "slash_commands": commands}
+            slash_commands.append(name)
+    data = {"prefix": Commands.Commands.prefix, "slash_commands": slash_commands}
     await send_message(client, 
         Message(
             sender="Server", message=data, message_type=Message.INFO, post_flag=True
@@ -140,16 +127,14 @@ async def send_details(client:Client):
     )
 
 async def login(client:Client):
-
     while not client.logged_in:
         message: Message = await client.receive_data()
-        if message.message_type == Message.LOGIN:
-            try:
-                message_data = message.message
-                username: str = message_data["username"]
-                password: str = message_data["password"]  
-                # Does nothing with the password at the moment for testing purposes
-            except (KeyError, TypeError) as e:
+
+        try:
+            message_data = message.message
+            username: str = message_data["username"]
+            password: str = message_data["password"]
+        except (KeyError, TypeError) as e:
                 await send_message(client,
                     Message(
                         sender="Server",
@@ -171,29 +156,31 @@ async def login(client:Client):
             )
             continue
 
-        if username in banned_users:
-            await send_message(client,
-                Message(
-                    sender="Server", message=Status.BANNED, message_type=Message.STATUS
+        if message.message_type == Message.LOGIN:
+            if username in banned_users:
+                await send_message(client,
+                    Message(
+                        sender="Server", message=Status.BANNED, message_type=Message.STATUS
+                    )
                 )
-            )
-            await client.leave()
-            return
+                await client.leave()
+                return
 
-        if username in clients.keys():
-            await send_message(client,
-                Message(
-                    sender="Server", message=Status.TAKEN, message_type=Message.INFO
+            if username in clients.keys():
+                await send_message(client,
+                    Message(
+                        sender="Server", message=Status.TAKEN, message_type=Message.INFO
+                    )
                 )
-            )
-            continue
+                continue
 
         await send_message(client,
             Message(sender="Server", message=Status.PERMIT, message_type=Message.STATUS)
         )
         client.logged_in = True
         client.username = username
-        clients[client.username] = client
+        async with lock:
+            clients[client.username] = client
         await send_message(client,
             Message(
                 sender="Server", message=Status.LOGGED_IN, message_type=Message.STATUS
