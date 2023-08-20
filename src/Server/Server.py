@@ -5,7 +5,7 @@ import time
 
 import ssl
 from misc.Temp import clients, banned_users, Channel, Message, Client, Status,\
-    command_response_event, command_request_event, Output, main_channel,send_message, lock
+    command_response_event, command_request_event, Output, main_channel,send_message
 
 # WARNING
 # This is a test server, there is currently no encrpytion or checks to prevent agasint exploits
@@ -22,43 +22,41 @@ ssl_connection = False
 
 async def keep_alive_timer():
     while True:
-        async with lock:
-            for client in clients.values():
-                if client.connected:
-                    if client.pong_received:
-                        client.pong_received = False
-                    else:
-                        await client.leave()
+        for client in clients.values():
+            if client.connected:
+                if client.pong_received:
+                    client.pong_received = False
+                else:
+                    await client.leave()
 
-                    client.time = time.time()
-                    message = Message(sender="Server",message="Ping",message_type=Message.SYN,time=time.time(),post_flag=True)
-                    await send_message(client, message)
+                client.time = time.time()
+                message = Message(sender="Server",message="Ping",message_type=Message.SYN,time=time.time(),post_flag=True)
+                await send_message(client, message)
 
         await asyncio.sleep(5)
 
 
 async def broadcast(message : Message, to_all=False, channel=main_channel):
-    async with lock: # They all use the clients dict so I just lock this entire block
-        sender = message.sender
-        if to_all:
-            for client in clients.values():
-                await send_message(client, message)
-                return
-                
-        if isinstance(sender, Client):
-            client = sender
-            channel :Channel= client.current_channel
-            print(channel, channel.name, channel.clients)
+    sender = message.sender
+    if to_all:
+        for client in clients.values():
+            await send_message(client, message)
+            return
+            
+    if isinstance(sender, Client):
+        client = sender
+        channel :Channel= client.current_channel
+        print(channel, channel.name, channel.clients)
 
-            for client in channel.clients:
-                await send_message(client, message)
-        elif sender in clients:
-            client = clients[sender]
-            channel :Channel= client.current_channel
-            await channel.send(message)
-        else:
-            for client in clients.values():
-                await send_message(client, message)
+        for client in channel.clients:
+            await send_message(client, message)
+    elif sender in clients:
+        client = clients[sender]
+        channel :Channel= client.current_channel
+        await channel.send(message)
+    else:
+        for client in clients.values():
+            await send_message(client, message)
 
 
 async def handle_client(client: Client):
