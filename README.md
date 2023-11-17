@@ -17,11 +17,11 @@ TCP-Chat-Server is a Python-based chat server designed to facilitate real-time c
 ![image](https://github.com/TheRealRedRiver559/Asyncio-TCP/assets/80642468/3ef6d58b-c7da-46ff-9c37-bc90662d265a)
 ![image](https://github.com/TheRealRedRiver559/Asyncio-TCP/assets/80642468/f5641986-9837-49f9-bfd1-53ce6ff964c4)
 ![image](https://github.com/TheRealRedRiver559/Asyncio-TCP/assets/80642468/6422c391-018c-4da7-88c2-6c3801c2bee0)
-There is a CLI version, but in this branch that has not been updated yet.
-The server has features such as settings window, a connect and login page and many more useful features. This is still in devolupment, but I am adding more every week. Recently I have been working on a context menu for users and channel to make it easier to add, message, and join channels or users.
+There is a CLI version, but in this branch, it has not been updated yet.
+The server has features such as a settings window, a connect and login page, and many more useful features. This is still in development, but I am adding more every week. Recently I have been working on a context menu for users and channel to make it easier to add, message, and join channels or users.
 
 ## Command Usage
-The defualt commands are structured as follows:
+The default commands are structured as follows:
 
 - `help`: Display a list of available commands and their usages.
 - `channel`:Display a list of public or available channels to join
@@ -43,22 +43,17 @@ The defualt commands are structured as follows:
 - `input-test`: Test input functionality of server response event.
 - `test`:Displays a test message as a proof of concept command.
 # Recent Updates
-
-- Added private and password-protected channels.
-- New updates relating the GUI. It now features auto suggestions.
-- Added a ping system to handle unresponsive clients.
-- Incorporation of type hints and documentation to enhance code clarity.
-### Future updates and improvements include:
-- Implementing SSL/TLS for enhanced security during data transmission.
-- Incorporating an SQL database for secure hashed and salted logins.
-- Finishing the GUI
-- Adding a public server that anyone can join!
+- None
+### Next big update!:
+- Adding lots of new commands with complex-like features. (Clear, custom-input, and more)
+- Adding private messaging (finally) and the addition of private channels that can be password protected.
+- Implementing SQL Light for a much better, and faster data design structure. This will allow the user permissions and channels to be used to their full extent in the coming updates.
+- SSL or some other private security (server-side only at the moment).
+- Adding message rate limiting and an optional built-in moderator system.
+  
 ## Known Issues
 While efforts have been made to ensure stability, some issues have been identified and are being addressed:
-- Server crashes when trying to access and change data storage
-- Improved performance is being sought for scenarios involving multiple users.
-- Addressing intermittent connection interruptions.
-- Further refining color checks and metadata in messages.
+- Improved performance is being sought for scenarios involving multiple users still.
 - Continuously resolving any unidentified errors.
 
 # Note
