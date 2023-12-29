@@ -1,5 +1,13 @@
 # TCP-Chat-Server
 
+## New Update Coming Soon!
+- Adding lots of new commands with complex-like features. (Clear, custom-input, and more)
+- Adding private messaging (finally) and the addition of private channels that can be password protected and privately viewed.
+- Implementing SQL Light for a much better, and faster data design structure. This will allow the user permissions and channels to be used to their full extent in the coming updates.
+- SSL or some other private security (Will be some sort of zero-trust system).
+- More optimizations and easier to make command systems
+
+
 ## Introduction
 TCP-Chat-Server is a Python-based chat server designed to facilitate real-time communication over a network. This project offers a proof-of-concept implementation with various features, including customizable commands, channel management, private channels, and more. While primarily developed for fun and practice, it showcases the potential for building more advanced chat systems.
 
@@ -44,12 +52,7 @@ The default commands are structured as follows:
 - `test`:Displays a test message as a proof of concept command.
 # Recent Updates
 - None
-### Next big update!:
-- Adding lots of new commands with complex-like features. (Clear, custom-input, and more)
-- Adding private messaging (finally) and the addition of private channels that can be password protected.
-- Implementing SQL Light for a much better, and faster data design structure. This will allow the user permissions and channels to be used to their full extent in the coming updates.
-- SSL or some other private security (server-side only at the moment).
-- Adding message rate limiting and an optional built-in moderator system.
+
   
 ## Known Issues
 While efforts have been made to ensure stability, some issues have been identified and are being addressed:
