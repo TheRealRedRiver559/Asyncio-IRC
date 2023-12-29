@@ -5,7 +5,8 @@
 - Adding private messaging (finally) and the addition of private channels that can be password protected and privately viewed.
 - Implementing SQL Light for a much better, and faster data design structure. This will allow the user permissions and channels to be used to their full extent in the coming updates.
 - SSL or some other private security (Will be some sort of zero-trust system).
-- More optimizations and easier to make command systems
+- More optimizations and easier-to-make command systems
+- Will be fixing the Command line Client to accommodate more features and support new changes.
 
 
 ## Introduction
