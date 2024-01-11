@@ -36,23 +36,33 @@ The default commands are structured as follows:
 - `channel`:Display a list of public or available channels to join
 - `create-channel <channel name> (password)`: Create a new channel with the specified name.
 - `join-channel <channel name> (password)`: Join a specified channel.
-- `leave-channel`: Leave the current channel.
+- `leave-channel`: Leave the current channel and direct back to the 'Hub'.
 - `delete-channel <channel name>`: Delete an existing channel.
+- `channels`: Shows a list of all public channels.
+- `private-message`: Sends a private message to a client. (WIP)
 - `users`: List all online users.
 - `user-count`: Display the count of online users.
+- `command-history`: Display the users command history.
 - `banned-users`: List banned users.
-- `broadcast <message>`: Send a message to all users.
+- `broadcast <message>`: Send a message to all users in the users current channel.
+- `server-broadcast <message>`: Send a message to all users in the server.
 - `ban <username> (reason)`: Ban a user with an optional reason.
 - `unban <username>`: Unban a previously banned user.
 - `disable-command <command name>`: Disable a specified command.
 - `enable-command <command name>`: Enable a previously disabled command.
-- `set-prefix <new prefix>`: Set a custom prefix for command invocation.
-- `set-perm <user> <new permission level>`: Modify permissions for specific users or roles.
+- `set-prefix <new prefix>`: Set a custom prefix for commands in the channel.
+- `perm`: Displays the users current channel permissions level.
+- `set-user-perm <user> <new permission level>`: Modify permissions for specific users or roles in a channel.
 - `command-history`: Display a history of recently executed commands and their arguments.
-- `input-test`: Test input functionality of server response event.
-- `test`:Displays a test message as a proof of concept command.
+- `clear (amount)`: Clears (amount) of messages if specified in the channel. Defualt is 100 messages if amount is not specified.
+- `reload-commands`: Command to hot-reload commands.py while the server is running. It will re import the file so you can edit, remove, or add commands without needing to restart the server.
+- `test`: Displays a test message as a proof of concept command.
+- `input-test`: Creates a user response event and asks the user for a number. Only the specified user can reply to the command.
+- `input-test2`: Creates a server response event and broadcasts a question to all users to enter an animal. Any user in the server can respond, will only accept 1 input globally.
+- `input-test4`: Creates a channel response event and broadcasts to the channel for users to enter a name. Any user in the channel can respond, will only accept 1 input in the channel.
+  
 # Recent Updates
-- None
+- Added more commands.
 
   
 ## Known Issues
