@@ -4,8 +4,8 @@
 - Adding lots of new commands with complex-like features. (Clear, custom-input, and more)
 - Adding private messaging (finally) and the addition of private channels that can be password protected and privately viewed.
 - Implementing SQL Light for a much better, and faster data design structure. This will allow the user permissions and channels to be used to their full extent in the coming updates.
-- SSL or some other private security (Will be some sort of zero-trust system).
-- More optimizations and easier-to-make command systems
+- SSL or some other private security for data.
+- More optimizations and an easier-to-make command systems
 - Will be fixing the Command line Client to accommodate more features and support new changes.
 
 
@@ -51,16 +51,23 @@ The default commands are structured as follows:
 - `command-history`: Display a history of recently executed commands and their arguments.
 - `input-test`: Test input functionality of server response event.
 - `test`:Displays a test message as a proof of concept command.
+- 
 # Recent Updates
 - None
 
+# Plans and things I want to implement
+- Channels will now have thier own permission sets. This is sort of like discords channel system with roles and what not.
+- Named permission levels. At the moment the server only allows numeric roles. However, I plan to add some sort of naming scheme you can implement per channel.
+- Client that will show the command arguments and description when typing instead of just the name.
+- Update the CLI client with tables using rich, curses, colorama, or something similiar. 
   
 ## Known Issues
 While efforts have been made to ensure stability, some issues have been identified and are being addressed:
+- Server overloads when lots of clients join and spam messages. Due to not having a send / receive queue.
+- No interval or rate limiting of messages. Will add one for the server, and a custom interval for each channel. 
 - Improved performance is being sought for scenarios involving multiple users still.
+- Performance issue involving the servers active client data structure. Need to add locks and find a way to not use .copy() since its slow. 
 - Continuously resolving any unidentified errors.
 
 # Note
-TCP-Chat-Server is an ongoing project, and user suggestions and contributions are welcomed. Please be aware that this system is not intended for secure or critical applications due to potential vulnerabilities and limitations.
-
-Enjoy the experience of exploring and contributing to this evolving chat server project!
+TCP-Chat-Server is an ongoing project, and user suggestions and contributions are welcomed. Please be aware that this system is not intended for secure or critical applications due to potential vulnerabilities and limitations at the moment.
