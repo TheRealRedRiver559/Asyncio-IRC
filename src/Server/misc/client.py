@@ -31,7 +31,6 @@ class Client:
             return message
         except Exception as e:
             print(f'Exception happend on recieving data with client: {self.username}. Exception: {e}')
-            #await self.leave()
             return None
     
     async def send_message(self, message: Message) -> None:
