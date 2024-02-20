@@ -1,6 +1,9 @@
 # TCP-Chat-Server
 
 ## New Update Coming Soon!
+# Status Update #
+Update is taking longer than expected, I wanted to devolop a new GUI using Textual or some other framework, but It has proven to be more difficult than I originally thought. I will continue working with the normal terminal GUI, and also the PySide6 GUI alongside it. 
+
 - Adding lots of new commands with complex-like features. (Clear, custom-input, and more)
 - Adding private messaging (finally) and the addition of private channels that can be password protected and privately viewed.
 - Implementing SQL Light for a much better, and faster data design structure. This will allow the user permissions and channels to be used to their full extent in the coming updates.
