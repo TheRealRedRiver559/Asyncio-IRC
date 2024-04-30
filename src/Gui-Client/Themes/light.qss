@@ -50,7 +50,7 @@ border-color:#2e2c2c;
 }
 
 QLabel {
-   color: #f0f0f0;
+   color: #000000;
 }
 
 #usernamelist {
