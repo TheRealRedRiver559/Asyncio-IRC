@@ -1,8 +1,8 @@
 import asyncio
 import time
 import importlib
-import misc.commands as Commands
-from misc.commands import server_broadcast
+import misc.Commands as Commands
+from misc.Commands import server_broadcast
 from misc.authorization import handle_authorization
 from misc.message import Message, MessageType, MessageSubType
 from misc.event import Event
